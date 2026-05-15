@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__stitch__get_project",
+      "mcp__stitch__list_screens",
+      "Bash(git add:*)",
+      "Bash(git commit:*)"
+    ]
+  }
+}
