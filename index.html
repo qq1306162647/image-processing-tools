@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>图灵工具 - 在线图像处理</title>
+  <link rel="stylesheet" href="styles/variables.css">
+  <link rel="stylesheet" href="styles/base.css">
+  <link rel="stylesheet" href="styles/layout.css">
+  <link rel="stylesheet" href="styles/components.css">
+</head>
+<body>
+  <div class="app-container">
+    <aside class="sidebar">
+      <div class="sidebar-logo">图灵工具</div>
+      <nav class="sidebar-nav">
+        <a href="#/" class="nav-item active">控制台</a>
+        <a href="#/format" class="nav-item">格式转换</a>
+        <a href="#/compress" class="nav-item">图像压缩</a>
+        <a href="#/crop" class="nav-item">图片裁切</a>
+        <a href="#/resize" class="nav-item">尺寸调整</a>
+        <a href="#/watermark" class="nav-item">水印处理</a>
+        <a href="#/base64" class="nav-item">Base64</a>
+        <a href="#/rotate" class="nav-item">图像旋转</a>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <div class="canvas-area" id="canvasArea">
+        <div class="empty-state" id="emptyState">
+          <p>拖放图片到此处，或</p>
+          <input type="file" id="fileInput" accept="image/*" style="display:none">
+          <button class="btn btn-primary" onclick="document.getElementById('fileInput').click()">选择图片</button>
+        </div>
+        <div id="canvasWrapper" style="display:none; position:relative;">
+          <canvas id="mainCanvas"></canvas>
+          <div class="crop-overlay" id="cropOverlay" style="display:none;">
+            <div class="crop-selection" id="cropSelection">
+              <div class="resize-handle nw"></div>
+              <div class="resize-handle ne"></div>
+              <div class="resize-handle sw"></div>
+              <div class="resize-handle se"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tool-panel" id="toolPanel">
+        <!-- 动态内容 -->
+      </div>
+
+      <div class="toolbar">
+        <button class="btn btn-secondary" id="resetBtn">重置</button>
+        <button class="btn btn-primary" id="exportBtn" disabled>导出图片</button>
+      </div>
+    </main>
+  </div>
+
+  <script type="module" src="scripts/app.js"></script>
+</body>
+</html>
