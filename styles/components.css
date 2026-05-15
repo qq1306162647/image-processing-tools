@@ -1,0 +1,208 @@
+/* 按钮 */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-xs);
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius);
+  font-size: 0.875rem;
+  font-weight: 500;
+  border: none;
+  transition: all 0.2s;
+}
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+.btn-primary {
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+}
+
+.btn-primary:hover {
+  background: var(--color-primary-hover);
+}
+
+.btn-secondary {
+  background: var(--color-surface);
+  color: var(--color-primary);
+  border: 1px solid var(--color-outline);
+}
+
+.btn-secondary:hover {
+  background: var(--color-surface-container);
+}
+
+/* 输入框 */
+.input {
+  width: 100%;
+  height: 40px;
+  padding: 0 var(--space-sm);
+  background: var(--color-surface);
+  border: 1px solid var(--color-outline-variant);
+  border-radius: var(--radius);
+  font-size: 0.875rem;
+  transition: border-color 0.2s;
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+/* 滑块 */
+.slider {
+  width: 100%;
+  height: 6px;
+  border-radius: var(--radius-full);
+  background: var(--color-surface-container);
+  appearance: none;
+  cursor: pointer;
+}
+
+.slider::-webkit-slider-thumb {
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  cursor: pointer;
+}
+
+/* 卡片 */
+.card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-outline-variant);
+  border-radius: var(--radius-md);
+  padding: var(--space-lg);
+}
+
+.card:hover {
+  box-shadow: var(--shadow-sm);
+}
+
+/* 空状态 */
+.empty-state {
+  border: 2px dashed var(--color-outline-variant);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  text-align: center;
+  color: var(--color-secondary);
+}
+
+/* Tab 面板 */
+.tab-panel {
+  display: none;
+}
+
+.tab-panel.active {
+  display: block;
+}
+
+/* 工具面板 */
+.tool-panel {
+  width: 300px;
+  background: var(--color-surface);
+  border-left: 1px solid var(--color-outline-variant);
+  padding: var(--space-lg);
+  overflow-y: auto;
+}
+
+.tool-panel h3 {
+  margin-bottom: var(--space-md);
+  font-size: 1rem;
+}
+
+.tool-group {
+  margin-bottom: var(--space-lg);
+}
+
+.tool-group label {
+  display: block;
+  margin-bottom: var(--space-xs);
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--color-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* 位置网格 */
+.position-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-xs);
+}
+
+.pos-btn {
+  padding: var(--space-sm);
+  background: var(--color-surface-container);
+  border: 2px solid transparent;
+  border-radius: var(--radius);
+  font-size: 0.75rem;
+  cursor: pointer;
+}
+
+.pos-btn.active {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+/* 形状按钮组 */
+.shape-btns {
+  display: flex;
+  gap: var(--space-xs);
+}
+
+.shape-btn {
+  flex: 1;
+  padding: var(--space-sm);
+  background: var(--color-surface-container);
+  border: 2px solid transparent;
+  border-radius: var(--radius);
+  cursor: pointer;
+}
+
+.shape-btn.active {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+/* 裁切覆盖层 */
+.crop-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+}
+
+.crop-selection {
+  position: absolute;
+  border: 2px dashed var(--color-primary);
+  background: rgba(37, 99, 235, 0.1);
+  cursor: move;
+  pointer-events: all;
+}
+
+.crop-selection.circle {
+  border-radius: 50%;
+}
+
+.resize-handle {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: var(--color-primary);
+  border: 2px solid var(--color-surface);
+  border-radius: 2px;
+}
+
+.resize-handle.nw { top: -5px; left: -5px; cursor: nw-resize; }
+.resize-handle.ne { top: -5px; right: -5px; cursor: ne-resize; }
+.resize-handle.sw { bottom: -5px; left: -5px; cursor: sw-resize; }
+.resize-handle.se { bottom: -5px; right: -5px; cursor: se-resize; }
