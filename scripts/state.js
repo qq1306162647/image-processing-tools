@@ -1,0 +1,53 @@
+// 状态管理
+export const state = {
+  currentRoute: '#/',
+  originalImage: null,
+  currentImage: null,
+  canvas: null,
+  format: 'image/jpeg',
+  quality: 90,
+  cropSelection: {
+    x: 0,
+    y: 0,
+    width: 100,
+    height: 100,
+    shape: 'rect'
+  },
+  watermark: {
+    type: 'text',
+    text: '水印',
+    fontSize: 24,
+    color: '#ffffff',
+    alpha: 50,
+    position: 'bottom-right',
+    image: null
+  },
+  resize: {
+    width: 800,
+    height: 600,
+    aspectLocked: true
+  },
+  originalSize: 0
+};
+
+export function setState(key, value) {
+  if (typeof key === 'object') {
+    Object.assign(state, key);
+  } else {
+    state[key] = value;
+  }
+}
+
+export function getState(key) {
+  return key ? state[key] : state;
+}
+
+export function resetState() {
+  if (state.originalImage) {
+    state.currentImage = state.originalImage;
+    state.format = 'image/jpeg';
+    state.quality = 90;
+    state.cropSelection = { x: 0, y: 0, width: 100, height: 100, shape: 'rect' };
+    state.resize = { width: state.originalImage.width, height: state.originalImage.height, aspectLocked: true };
+  }
+}
