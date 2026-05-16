@@ -1919,7 +1919,7 @@ function renderRotate() {
         <!-- Canvas Toolbar -->
         <div class="h-12 border-b border-outline-variant flex items-center px-md justify-between bg-surface-bright">
           <div class="flex items-center gap-sm text-on-surface-variant">
-            <span class="font-label-md text-label-md px-sm py-xs bg-surface-container-highest rounded text-on-surface" id="rotateFileName">photo_1_edited.jpg</span>
+            <span class="font-label-md text-label-md px-sm py-xs bg-surface-container-highest rounded text-on-surface" id="rotateFileName">${state.currentImage ? '已选择图片' : '未选择图片'}</span>
             <span class="font-label-md text-label-md opacity-70" id="rotateFileSize">${state.currentImage ? `${state.currentImage.width} x ${state.currentImage.height} px` : '-'}</span>
           </div>
           <div class="flex items-center gap-xs">
