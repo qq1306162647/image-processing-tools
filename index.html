@@ -3,59 +3,273 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>图灵工具 - 在线图像处理</title>
-  <link rel="stylesheet" href="styles/variables.css">
-  <link rel="stylesheet" href="styles/base.css">
-  <link rel="stylesheet" href="styles/layout.css">
-  <link rel="stylesheet" href="styles/components.css">
+  <title>图灵工具 - 免费在线图像处理工具 | 图片压缩/裁剪/格式转换</title>
+  <meta name="description" content="图灵工具是一款免费的在线图像处理工具，提供图片压缩、裁剪、格式转换、尺寸调整、水印添加、Base64编码、旋转等常见功能。无需安装，即开即用，保护隐私安全。">
+  <meta name="keywords" content="在线图片处理,图片压缩工具,图片裁剪,格式转换,JPG转PNG,PNG转JPG,WebP转换,图片水印,Base64编码,图片旋转,调整图片尺寸,图像处理软件,免费图片工具,在线图像编辑器,图片优化">
+  <meta name="author" content="图灵工具">
+  <meta name="robots" content="index, follow">
+  <meta name="googlebot" content="index, follow">
+  <meta name="revisit-after" content="7 days">
+  <meta name="language" content="Chinese">
+  <meta name="theme-color" content="#004ac6">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://turlingtool.com/">
+  <meta property="og:title" content="图灵工具 - 免费在线图像处理工具">
+  <meta property="og:description" content="免费的在线图像处理工具，提供图片压缩、裁剪、格式转换、水印、Base64编码等功能。无需下载安装，即开即用。">
+  <meta property="og:image" content="https://turlingtool.com/og-image.png">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:site_name" content="图灵工具">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://turlingtool.com/">
+  <meta name="twitter:title" content="图灵工具 - 免费在线图像处理工具">
+  <meta name="twitter:description" content="免费的在线图像处理工具，提供图片压缩、裁剪、格式转换、水印、Base64编码等功能。无需下载安装，即开即用。">
+  <meta name="twitter:image" content="https://turlingtool.com/og-image.png">
+
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://turlingtool.com/">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+
+  <!-- Google Search Console Verification -->
+  <meta name="google-site-verification" content="your-verification-code">
+
+  <!-- Geo Tags for Local SEO -->
+  <meta name="geo.region" content="CN">
+  <meta name="geo.placename" content="图灵工具">
+
+  <!-- Structured Data (JSON-LD) for Rich Snippets -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "图灵工具",
+    "alternateName": "Turling Tools",
+    "description": "免费的在线图像处理工具，提供图片压缩、裁剪、格式转换、水印、Base64编码等功能",
+    "url": "https://turlingtool.com",
+    "applicationCategory": "MultimediaApplication",
+    "operatingSystem": "Any",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "CNY"
+    },
+    "featureList": [
+      "图片压缩",
+      "图片裁剪",
+      "格式转换",
+      "尺寸调整",
+      "添加水印",
+      "Base64编码",
+      "图片旋转"
+    ],
+    "screenshot": "https://turlingtool.com/screenshot.png",
+    "author": {
+      "@type": "Organization",
+      "name": "图灵工具"
+    }
+  }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    @font-face {
+      font-family: 'Material Symbols Outlined';
+      font-style: normal;
+      font-weight: 400;
+      font-display: block;
+      src: url('fonts/MaterialSymbols/material-symbols-outlined-400.ttf') format('truetype');
+    }
+    .material-symbols-outlined {
+      font-family: 'Material Symbols Outlined';
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+  </style>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            "primary-fixed-dim": "#b4c5ff",
+            "surface-dim": "#d8dadc",
+            "secondary-fixed-dim": "#b7c8e1",
+            "on-surface": "#191c1e",
+            "secondary-fixed": "#d3e4fe",
+            "on-primary-fixed-variant": "#003ea8",
+            "secondary-container": "#d0e1fb",
+            "tertiary": "#943700",
+            "surface": "#f7f9fb",
+            "inverse-primary": "#b4c5ff",
+            "inverse-on-surface": "#eff1f3",
+            "outline-variant": "#c3c6d7",
+            "primary": "#004ac6",
+            "on-secondary-fixed": "#0b1c30",
+            "primary-container": "#2563eb",
+            "tertiary-container": "#bc4800",
+            "on-surface-variant": "#434655",
+            "surface-tint": "#0053db",
+            "on-primary-container": "#eeefff",
+            "on-secondary-fixed-variant": "#38485d",
+            "background": "#f7f9fb",
+            "tertiary-fixed": "#ffdbcd",
+            "error": "#ba1a1a",
+            "on-primary-fixed": "#00174b",
+            "surface-container": "#eceef0",
+            "on-error-container": "#93000a",
+            "surface-container-highest": "#e0e3e5",
+            "surface-variant": "#e0e3e5",
+            "on-tertiary": "#ffffff",
+            "surface-container-high": "#e6e8ea",
+            "on-tertiary-fixed": "#360f00",
+            "on-primary": "#ffffff",
+            "on-error": "#ffffff",
+            "on-tertiary-fixed-variant": "#7d2d00",
+            "secondary": "#505f76",
+            "surface-bright": "#f7f9fb",
+            "tertiary-fixed-dim": "#ffb596",
+            "on-background": "#191c1e",
+            "inverse-surface": "#2d3133",
+            "outline": "#737686",
+            "on-secondary": "#ffffff",
+            "surface-container-lowest": "#ffffff",
+            "primary-fixed": "#dbe1ff",
+            "on-tertiary-container": "#ffede6",
+            "error-container": "#ffdad6",
+            "on-secondary-container": "#54647a",
+            "surface-container-low": "#f2f4f6"
+          },
+          borderRadius: {
+            DEFAULT: "0.25rem",
+            lg: "0.5rem",
+            xl: "0.75rem",
+            full: "9999px"
+          },
+          spacing: {
+            "header-height": "64px",
+            gutter: "16px",
+            md: "16px",
+            xl: "32px",
+            sm: "8px",
+            xs: "4px",
+            lg: "24px",
+            base: "4px",
+            "sidebar-width": "260px"
+          },
+          fontFamily: {
+            "headline-lg": ["Inter"],
+            "headline-lg-mobile": ["Inter"],
+            "body-lg": ["Inter"],
+            "body-md": ["Inter"],
+            "label-md": ["Inter"],
+            "headline-md": ["Inter"],
+            "button-text": ["Inter"]
+          },
+          fontSize: {
+            "headline-lg": ["30px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+            "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "700" }],
+            "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+            "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+            "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500" }],
+            "headline-md": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+            "button-text": ["14px", { "lineHeight": "20px", "fontWeight": "600" }]
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="styles/app.css">
 </head>
-<body>
-  <div class="app-container">
-    <aside class="sidebar">
-      <div class="sidebar-logo">图灵工具</div>
-      <nav class="sidebar-nav">
-        <a href="#/" class="nav-item active">控制台</a>
-        <a href="#/format" class="nav-item">格式转换</a>
-        <a href="#/compress" class="nav-item">图像压缩</a>
-        <a href="#/crop" class="nav-item">图片裁切</a>
-        <a href="#/resize" class="nav-item">尺寸调整</a>
-        <a href="#/watermark" class="nav-item">水印处理</a>
-        <a href="#/base64" class="nav-item">Base64</a>
-        <a href="#/rotate" class="nav-item">图像旋转</a>
-      </nav>
-    </aside>
-
-    <main class="main-content">
-      <div class="canvas-area" id="canvasArea">
-        <div class="empty-state" id="emptyState">
-          <p>拖放图片到此处，或</p>
-          <input type="file" id="fileInput" accept="image/*" style="display:none">
-          <button class="btn btn-primary" onclick="document.getElementById('fileInput').click()">选择图片</button>
-        </div>
-        <div id="canvasWrapper" style="display:none; position:relative;">
-          <canvas id="mainCanvas"></canvas>
-          <div class="crop-overlay" id="cropOverlay" style="display:none;">
-            <div class="crop-selection" id="cropSelection">
-              <div class="resize-handle nw"></div>
-              <div class="resize-handle ne"></div>
-              <div class="resize-handle sw"></div>
-              <div class="resize-handle se"></div>
-            </div>
-          </div>
-        </div>
+<body class="bg-background text-on-background font-body-md antialiased overflow-hidden flex h-screen w-screen">
+  <!-- SideNavBar -->
+  <nav id="sidebar" class="hidden md:flex flex-col h-full w-[260px] p-md gap-xs border-r border-outline-variant bg-surface shrink-0 z-20">
+    <!-- Header -->
+    <div class="flex items-center gap-sm px-sm py-md mb-md">
+      <div class="w-8 h-8 rounded-lg bg-primary flex items-center justify-center shrink-0">
+        <span class="material-symbols-outlined text-on-primary text-[20px]">dashboard_customize</span>
       </div>
-
-      <div class="tool-panel" id="toolPanel">
-        <!-- 动态内容 -->
+      <div>
+        <h1 class="font-headline-md text-headline-md font-bold text-primary truncate">图灵工具</h1>
+        <p class="font-label-md text-label-md text-on-surface-variant truncate">专业图像处理</p>
       </div>
+    </div>
+    <!-- Navigation Links -->
+    <div class="flex-1 overflow-y-auto flex flex-col gap-xs">
+      <a class="nav-item text-on-surface-variant flex items-center px-md py-sm rounded-lg hover:bg-surface-container-highest transition-colors active:scale-[0.95] duration-150" href="#/" data-route="#/">
+        <span class="material-symbols-outlined mr-sm text-[20px]">dashboard</span>
+        <span class="font-body-md text-body-md">控制台</span>
+      </a>
+      <a class="nav-item text-on-surface-variant flex items-center px-md py-sm rounded-lg hover:bg-surface-container-highest transition-colors active:scale-[0.95] duration-150" href="#/format" data-route="#/format">
+        <span class="material-symbols-outlined mr-sm text-[20px]">transform</span>
+        <span class="font-body-md text-body-md">格式转换</span>
+      </a>
+      <a class="nav-item text-on-surface-variant flex items-center px-md py-sm rounded-lg hover:bg-surface-container-highest transition-colors active:scale-[0.95] duration-150" href="#/crop" data-route="#/crop">
+        <span class="material-symbols-outlined mr-sm text-[20px]">crop</span>
+        <span class="font-body-md text-body-md">图片裁剪</span>
+      </a>
+      <a class="nav-item text-on-surface-variant flex items-center px-md py-sm rounded-lg hover:bg-surface-container-highest transition-colors active:scale-[0.95] duration-150" href="#/resize" data-route="#/resize">
+        <span class="material-symbols-outlined mr-sm text-[20px]">aspect_ratio</span>
+        <span class="font-body-md text-body-md">尺寸调整</span>
+      </a>
+      <a class="nav-item text-on-surface-variant flex items-center px-md py-sm rounded-lg hover:bg-surface-container-highest transition-colors active:scale-[0.95] duration-150" href="#/compress" data-route="#/compress">
+        <span class="material-symbols-outlined mr-sm text-[20px]">compress</span>
+        <span class="font-body-md text-body-md">图片压缩</span>
+      </a>
+      <a class="nav-item text-on-surface-variant flex items-center px-md py-sm rounded-lg hover:bg-surface-container-highest transition-colors active:scale-[0.95] duration-150" href="#/watermark" data-route="#/watermark">
+        <span class="material-symbols-outlined mr-sm text-[20px]">branding_watermark</span>
+        <span class="font-body-md text-body-md">水印工具</span>
+      </a>
+      <a class="nav-item text-on-surface-variant flex items-center px-md py-sm rounded-lg hover:bg-surface-container-highest transition-colors active:scale-[0.95] duration-150" href="#/base64" data-route="#/base64">
+        <span class="material-symbols-outlined mr-sm text-[20px]">code</span>
+        <span class="font-body-md text-body-md">Base64转换</span>
+      </a>
+      <a class="nav-item text-on-surface-variant flex items-center px-md py-sm rounded-lg hover:bg-surface-container-highest transition-colors active:scale-[0.95] duration-150" href="#/rotate" data-route="#/rotate">
+        <span class="material-symbols-outlined mr-sm text-[20px]">rotate_right</span>
+        <span class="font-body-md text-body-md">旋转工具</span>
+      </a>
+    </div>
+  </nav>
 
-      <div class="toolbar">
-        <button class="btn btn-secondary" id="resetBtn">重置</button>
-        <button class="btn btn-primary" id="exportBtn" disabled>导出图片</button>
+  <!-- Main Content Wrapper -->
+  <div class="flex flex-col flex-1 h-full overflow-hidden w-full">
+    <!-- TopAppBar -->
+    <header class="flex justify-between items-center h-[64px] px-xl w-full sticky top-0 z-50 bg-surface-container-lowest border-b border-outline-variant shadow-sm shrink-0">
+      <!-- Mobile Menu Toggle -->
+      <button class="md:hidden p-2 -ml-2 text-on-surface-variant hover:bg-surface-container-high rounded-full transition-colors">
+        <span class="material-symbols-outlined">menu</span>
+      </button>
+      <!-- Brand (Mobile only) -->
+      <div class="md:hidden flex-1 flex items-center px-sm">
+        <span class="font-headline-md text-headline-md font-bold text-primary">图灵工具</span>
       </div>
+      <!-- Actions -->
+      <div class="flex items-center gap-md">
+        <button id="uploadBtn" class="flex items-center gap-xs px-md py-[8px] bg-primary text-on-primary rounded-lg font-button-text text-button-text hover:bg-primary/90 active:scale-[0.98] transition-all shadow-sm">
+          <span class="material-symbols-outlined text-[18px]">upload</span>
+          上传图片
+        </button>
+      </div>
+    </header>
+
+    <!-- Tool Workspace (Dynamic Content) -->
+    <main id="toolContent" class="flex-1 overflow-hidden p-md md:p-xl flex flex-col md:flex-row gap-md md:gap-xl">
+      <!-- Content will be injected here -->
     </main>
   </div>
 
+  <!-- Hidden File Input -->
+  <input type="file" id="fileInput" accept="image/*" class="hidden">
+
+  <script type="module" src="scripts/router.js"></script>
   <script type="module" src="scripts/app.js"></script>
 </body>
 </html>

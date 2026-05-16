@@ -4,7 +4,7 @@ export const state = {
   originalImage: null,
   currentImage: null,
   canvas: null,
-  format: 'image/jpeg',
+  format: 'image/webp',
   quality: 90,
   cropSelection: {
     x: 0,
@@ -20,7 +20,11 @@ export const state = {
     color: '#ffffff',
     alpha: 50,
     position: 'bottom-right',
-    image: null
+    image: null,
+    imageData: null,
+    imageWidth: 100,
+    x: 20,
+    y: 20
   },
   resize: {
     width: 800,
@@ -32,7 +36,10 @@ export const state = {
 
 export function setState(key, value) {
   if (typeof key === 'object') {
-    Object.assign(state, key);
+    // 对于简单的顶层属性，直接赋值
+    for (const k in key) {
+      state[k] = key[k];
+    }
   } else {
     state[key] = value;
   }

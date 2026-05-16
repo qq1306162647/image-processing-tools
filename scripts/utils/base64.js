@@ -9,19 +9,27 @@ export function imageToBase64(file) {
 
 export function base64ToImage(base64) {
   return new Promise((resolve, reject) => {
-    const arr = base64.split(',');
-    if (arr.length < 2) {
+    // 自动识别是否包含 Data URI 前缀
+    let mime = 'image/png';
+    let data = base64;
+
+    if (base64.includes(',')) {
+      const arr = base64.split(',');
+      mime = arr[0].match(/:(.*?);/)[1];
+      data = arr[1];
+    }
+
+    try {
+      const byteString = atob(data);
+      const ab = new ArrayBuffer(byteString.length);
+      const ia = new Uint8Array(ab);
+      for (let i = 0; i < byteString.length; i++) {
+        ia[i] = byteString.charCodeAt(i);
+      }
+      resolve(new Blob([ab], { type: mime }));
+    } catch (e) {
       reject(new Error('Invalid base64 string'));
-      return;
     }
-    const mime = arr[0].match(/:(.*?);/)[1];
-    const byteString = atob(arr[1]);
-    const ab = new ArrayBuffer(byteString.length);
-    const ia = new Uint8Array(ab);
-    for (let i = 0; i < byteString.length; i++) {
-      ia[i] = byteString.charCodeAt(i);
-    }
-    resolve(new Blob([ab], { type: mime }));
   });
 }
 

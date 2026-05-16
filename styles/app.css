@@ -1,0 +1,120 @@
+/* App-specific styles - most styling is handled by Tailwind via index.html */
+
+/* Checkerboard pattern for transparent image backgrounds */
+.bg-checker {
+  background-color: #f2f4f6;
+  background-image:
+    linear-gradient(45deg, #e6e8ea 25%, transparent 25%, transparent 75%, #e6e8ea 75%, #e6e8ea),
+    linear-gradient(45deg, #e6e8ea 25%, transparent 25%, transparent 75%, #e6e8ea 75%, #e6e8ea);
+  background-size: 20px 20px;
+  background-position: 0 0, 10px 10px;
+}
+
+/* Active nav item styling */
+.nav-item.active {
+  background-color: #dbe1ff;
+  color: #004ac6;
+  font-weight: 600;
+}
+
+/* Crop wrapper for positioning */
+#cropWrapper {
+  position: relative;
+  display: inline-block;
+  max-width: 100%;
+}
+
+/* Image container for positioning */
+#imageContainer {
+  position: relative;
+  display: inline-block;
+}
+
+/* SVG mask overlay */
+#maskSvg {
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* Mask panels - dark overlay around selection area */
+#maskTop, #maskBottom, #maskLeft, #maskRight {
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* Selection box - transparent background shows clear image */
+#selectionBox {
+  position: absolute;
+  border: 2px dashed rgba(255, 255, 255, 0.9);
+  background: transparent;
+  cursor: move;
+  z-index: 20;
+  pointer-events: auto;
+}
+
+#selectionBox.circle {
+  border-radius: 50%;
+}
+
+/* Resize handles */
+.resize-handle {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background: #ffffff;
+  border: 2px solid #004ac6;
+  border-radius: 50%;
+  z-index: 40;
+}
+
+.resize-handle.nw { top: -6px; left: -6px; cursor: nwse-resize; }
+.resize-handle.ne { top: -6px; right: -6px; cursor: nesw-resize; }
+.resize-handle.sw { bottom: -6px; left: -6px; cursor: nesw-resize; }
+.resize-handle.se { bottom: -6px; right: -6px; cursor: nwse-resize; }
+.resize-handle.n { top: -6px; left: 50%; transform: translateX(-50%); cursor: ns-resize; }
+.resize-handle.s { bottom: -6px; left: 50%; transform: translateX(-50%); cursor: ns-resize; }
+.resize-handle.e { right: -6px; top: 50%; transform: translateY(-50%); cursor: ew-resize; }
+.resize-handle.w { left: -6px; top: 50%; transform: translateY(-50%); cursor: ew-resize; }
+
+/* Dropzone states */
+.dropzone {
+  transition: all 0.2s ease;
+}
+
+.dropzone.dragover {
+  border-color: #004ac6;
+  background-color: #dbe1ff;
+}
+
+/* Image preview container */
+.image-preview {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: auto;
+}
+
+/* Slider custom styling */
+input[type="range"] {
+  -webkit-appearance: none;
+  width: 100%;
+  background: transparent;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  height: 16px;
+  width: 16px;
+  border-radius: 50%;
+  background: #004ac6;
+  cursor: pointer;
+  margin-top: -6px;
+}
+
+input[type="range"]::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 4px;
+  cursor: pointer;
+  background: #e0e3e5;
+  border-radius: 2px;
+}
