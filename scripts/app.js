@@ -58,7 +58,8 @@ function loadImage(file) {
       currentImage: img,
       originalSize: file.size,
       originalFormat: originalFormat,
-      format: originalFormat  // 默认使用原图格式
+      format: originalFormat,  // 默认使用原图格式
+      convertToWebp: originalFormat === 'image/png'  // PNG 默认勾选 WebP 转换
     });
 
     // 重新渲染当前页面以显示图片
@@ -332,7 +333,7 @@ function renderCompress() {
           <!-- Convert to WebP Option -->
           <div class="flex items-center gap-3 p-3 bg-surface-container-low rounded-lg border border-outline-variant/50">
             <label class="flex items-center gap-2 cursor-pointer flex-1">
-              <input type="checkbox" id="convertWebp" class="w-5 h-5 rounded border-outline-variant accent-primary cursor-pointer"/>
+              <input type="checkbox" id="convertWebp" class="w-5 h-5 rounded border-outline-variant accent-primary cursor-pointer" ${state.convertToWebp ? 'checked' : ''}/>
               <div class="flex flex-col">
                 <span class="font-body-md text-body-md text-on-surface">转换为 WebP</span>
                 <span class="font-label-md text-label-md text-on-surface-variant">PNG/JPEG 转 WebP 可获得更好压缩效果</span>
