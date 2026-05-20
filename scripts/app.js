@@ -372,17 +372,21 @@ function setupCompressPanel() {
   const qualityValue = document.getElementById('qualityValue');
   const downloadBtn = document.getElementById('downloadBtn');
   let debounceTimer = null;
+  let lastQuality = state.quality;
 
   compressSlider?.addEventListener('input', async (e) => {
     const quality = parseInt(e.target.value);
     setState({ quality });
     qualityValue.textContent = `${quality}%`;
 
-    // 防抖：清除之前的定时器，等用户停止拖动后再计算
+    // 防抖：等用户停止拖动 500ms 后再计算
     if (debounceTimer) clearTimeout(debounceTimer);
-    debounceTimer = setTimeout(() => {
-      updateCompressPreview();
-    }, 150);
+    debounceTimer = setTimeout(async () => {
+      // 如果质量没变，不需要重新计算
+      if (quality === lastQuality) return;
+      lastQuality = quality;
+      await updateCompressPreview();
+    }, 500);
   });
 
   downloadBtn?.addEventListener('click', () => {
