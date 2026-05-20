@@ -399,11 +399,11 @@ async function updateCompressPreview() {
   const originalSize = state.originalSize || 0;
   if (originalSize === 0) return;
 
-  // 使用缩略图计算预估，大小固定为 400px
-  const maxSize = 400;
-  const scale = Math.min(maxSize / img.width, maxSize / img.height, 1);
-  const thumbWidth = Math.round(img.width * scale);
-  const thumbHeight = Math.round(img.height * scale);
+  // 使用 100px 超小缩略图计算，速度快
+  const thumbSize = 100;
+  const scale = Math.min(thumbSize / img.width, thumbSize / img.height, 1);
+  const thumbWidth = Math.max(1, Math.round(img.width * scale));
+  const thumbHeight = Math.max(1, Math.round(img.height * scale));
 
   const canvas = document.createElement('canvas');
   canvas.width = thumbWidth;
@@ -417,12 +417,13 @@ async function updateCompressPreview() {
 
   if (!blob) return;
 
-  // 根据缩略图大小按比例估算原图压缩后大小
-  // 压缩后大小 ≈ 缩略图blob大小 * (原图像素 / 缩略图像素)
+  // 估算原图压缩后大小
+  // 使用面积比例来估算，同时考虑 JPEG 压缩的非线性特性
   const thumbPixels = thumbWidth * thumbHeight;
   const originalPixels = img.width * img.height;
-  const ratio = originalPixels / thumbPixels;
-  const estimatedSize = Math.round(blob.size * ratio);
+  // JPEG 压缩比大致与像素数的对数成正比，这里用平方根来近似
+  const pixelRatio = Math.sqrt(originalPixels / thumbPixels);
+  const estimatedSize = Math.round(blob.size * pixelRatio);
 
   const compressedLabel = document.getElementById('compressedSizeLabel');
   if (compressedLabel) {
