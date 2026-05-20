@@ -2257,14 +2257,30 @@ async function handleExport(exportFormat) {
       ctx.fillStyle = wm.color;
       ctx.font = `${wm.fontSize}px Inter, sans-serif`;
 
-      // 使用自由定位的 x, y 坐标
+      // 计算水印坐标转换（从容器坐标转换为原图坐标）
+      const container = document.getElementById('watermarkImageContainer');
+      const wmImg = document.getElementById('watermarkImage');
       let x = wm.x;
       let y = wm.y;
 
-      // 如果位置是 bottom-right 或未设置，使用默认值
-      if (!x || !y) {
-        x = x || 20;
-        y = y || img.height - wm.fontSize - 20;
+      if (container && wmImg) {
+        const containerRect = container.getBoundingClientRect();
+        const imgRect = wmImg.getBoundingClientRect();
+        // 计算 img 在 container 中的偏移
+        const imgOffsetX = imgRect.left - containerRect.left;
+        const imgOffsetY = imgRect.top - containerRect.top;
+        // 计算 img 的实际尺寸
+        const imgDisplayWidth = imgRect.width;
+        const imgDisplayHeight = imgRect.height;
+        // 转换为原图坐标
+        x = ((x - imgOffsetX) / imgDisplayWidth) * img.width;
+        y = ((y - imgOffsetY) / imgDisplayHeight) * img.height;
+      }
+
+      // 如果位置无效，使用默认值
+      if (!x || !y || isNaN(x) || isNaN(y)) {
+        x = 20;
+        y = img.height - wm.fontSize - 20;
       }
 
       ctx.fillText(wm.text, x, y);
@@ -2282,13 +2298,26 @@ async function handleExport(exportFormat) {
       const wmWidth = wm.imageWidth || 100;
       const wmHeight = (watermarkImg.height / watermarkImg.width) * wmWidth;
 
-      // 使用自由定位的 x, y 坐标
+      // 计算水印坐标转换（从容器坐标转换为原图坐标）
+      const container = document.getElementById('watermarkImageContainer');
+      const wmImgEl = document.getElementById('watermarkImage');
       let x = wm.x;
       let y = wm.y;
 
-      // 如果位置未设置，使用默认值
-      if (x === undefined || x === null) x = 20;
-      if (y === undefined || y === null) y = 20;
+      if (container && wmImgEl) {
+        const containerRect = container.getBoundingClientRect();
+        const imgRect = wmImgEl.getBoundingClientRect();
+        const imgOffsetX = imgRect.left - containerRect.left;
+        const imgOffsetY = imgRect.top - containerRect.top;
+        const imgDisplayWidth = imgRect.width;
+        const imgDisplayHeight = imgRect.height;
+        x = ((x - imgOffsetX) / imgDisplayWidth) * img.width;
+        y = ((y - imgOffsetY) / imgDisplayHeight) * img.height;
+      }
+
+      // 如果位置无效，使用默认值
+      if (x === undefined || x === null || isNaN(x)) x = 20;
+      if (y === undefined || y === null || isNaN(y)) y = 20;
 
       ctx.drawImage(watermarkImg, x, y, wmWidth, wmHeight);
       ctx.globalAlpha = 1;
