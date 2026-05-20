@@ -7,6 +7,7 @@ export const state = {
   format: 'image/webp',
   quality: 90,
   originalFormat: 'image/png',  // 原图格式，压缩时保持原格式
+  convertToWebp: false,  // PNG 图片是否转换为 WebP 压缩
   cropSelection: {
     x: 0,
     y: 0,
