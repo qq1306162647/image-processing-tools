@@ -396,28 +396,47 @@ async function updateCompressPreview() {
   const originalSize = state.originalSize || 0;
   if (originalSize === 0) return;
 
-  // 创建临时 Canvas 进行真实压缩
+  const isPng = state.originalFormat === 'image/png';
+  let estimatedSize = originalSize;
+  let canCompress = true;
+
+  if (isPng) {
+    // PNG 是无损格式，quality 参数无效，Canvas 重新编码可能反而变大
+    // 提示用户 PNG 无法进一步压缩，或建议转换格式
+    const ratioLabel = document.getElementById('compressRatioLabel');
+    if (ratioLabel) {
+      ratioLabel.textContent = 'PNG 无损格式，无法压缩';
+      ratioLabel.classList.remove('text-primary');
+      ratioLabel.classList.add('text-error');
+    }
+    const compressedLabel = document.getElementById('compressedSizeLabel');
+    if (compressedLabel) {
+      compressedLabel.textContent = formatSize(originalSize);
+      compressedLabel.classList.remove('text-primary');
+      compressedLabel.classList.add('text-error');
+    }
+    return;
+  }
+
+  // JPEG/WebP 可以通过 quality 压缩
   const canvas = document.createElement('canvas');
   canvas.width = img.width;
   canvas.height = img.height;
   const ctx = canvas.getContext('2d');
   ctx.drawImage(img, 0, 0);
 
-  // 获取真实压缩后的大小（使用原图格式）
   const blob = await new Promise((resolve) => {
     canvas.toBlob(resolve, state.originalFormat, state.quality / 100);
   });
 
   if (!blob) return;
 
-  const estimatedSize = blob.size;
-  const qualityPercent = state.quality / 100;
+  estimatedSize = blob.size;
 
   const compressedLabel = document.getElementById('compressedSizeLabel');
   if (compressedLabel) {
     compressedLabel.textContent = formatSize(estimatedSize);
 
-    // 根据压缩后大小与原图大小的比较显示不同颜色
     if (estimatedSize > originalSize) {
       compressedLabel.classList.remove('text-primary');
       compressedLabel.classList.add('text-error');
@@ -427,7 +446,6 @@ async function updateCompressPreview() {
     }
   }
 
-  // 计算节省比例
   const ratioLabel = document.getElementById('compressRatioLabel');
   if (ratioLabel) {
     const savedPercent = Math.round((1 - estimatedSize / originalSize) * 100);
@@ -2292,8 +2310,10 @@ async function handleExport(exportFormat) {
     }
 
     // 获取导出的 blob
+    // PNG 是无损格式，quality 参数无效，不需要传 quality
+    const isPng = format === 'image/png';
     const blob = await new Promise((resolve) => {
-      exportCanvas.toBlob(resolve, format, state.quality / 100);
+      exportCanvas.toBlob(resolve, format, isPng ? undefined : state.quality / 100);
     });
 
     const url = URL.createObjectURL(blob);
