@@ -2257,7 +2257,8 @@ async function handleExport(exportFormat) {
       ctx.fillStyle = wm.color;
       ctx.font = `${wm.fontSize}px Inter, sans-serif`;
 
-      // 计算水印坐标转换（从容器坐标转换为原图坐标）
+      // 水印坐标是相对于容器的，需要转换为原图坐标
+      // 思路：容器中显示的图片区域就是水印的参考系
       const container = document.getElementById('watermarkImageContainer');
       const wmImg = document.getElementById('watermarkImage');
       let x = wm.x;
@@ -2266,19 +2267,24 @@ async function handleExport(exportFormat) {
       if (container && wmImg) {
         const containerRect = container.getBoundingClientRect();
         const imgRect = wmImg.getBoundingClientRect();
-        // 计算 img 在 container 中的偏移
-        const imgOffsetX = imgRect.left - containerRect.left;
-        const imgOffsetY = imgRect.top - containerRect.top;
-        // 计算 img 的实际尺寸
+
+        // 计算图片在容器中的显示区域（可能有留白）
+        const imgLeft = imgRect.left - containerRect.left;
+        const imgTop = imgRect.top - containerRect.top;
         const imgDisplayWidth = imgRect.width;
         const imgDisplayHeight = imgRect.height;
+
+        // 水印坐标减去图片的偏移量，得到相对于图片显示区域的坐标
+        const relativeX = x - imgLeft;
+        const relativeY = y - imgTop;
+
         // 转换为原图坐标
-        x = ((x - imgOffsetX) / imgDisplayWidth) * img.width;
-        y = ((y - imgOffsetY) / imgDisplayHeight) * img.height;
+        x = (relativeX / imgDisplayWidth) * img.width;
+        y = (relativeY / imgDisplayHeight) * img.height;
       }
 
       // 如果位置无效，使用默认值
-      if (!x || !y || isNaN(x) || isNaN(y)) {
+      if (!x || !y || isNaN(x) || isNaN(y) || x < 0 || y < 0) {
         x = 20;
         y = img.height - wm.fontSize - 20;
       }
@@ -2298,7 +2304,7 @@ async function handleExport(exportFormat) {
       const wmWidth = wm.imageWidth || 100;
       const wmHeight = (watermarkImg.height / watermarkImg.width) * wmWidth;
 
-      // 计算水印坐标转换（从容器坐标转换为原图坐标）
+      // 水印坐标是相对于容器的，需要转换为原图坐标
       const container = document.getElementById('watermarkImageContainer');
       const wmImgEl = document.getElementById('watermarkImage');
       let x = wm.x;
@@ -2307,17 +2313,22 @@ async function handleExport(exportFormat) {
       if (container && wmImgEl) {
         const containerRect = container.getBoundingClientRect();
         const imgRect = wmImgEl.getBoundingClientRect();
-        const imgOffsetX = imgRect.left - containerRect.left;
-        const imgOffsetY = imgRect.top - containerRect.top;
+
+        const imgLeft = imgRect.left - containerRect.left;
+        const imgTop = imgRect.top - containerRect.top;
         const imgDisplayWidth = imgRect.width;
         const imgDisplayHeight = imgRect.height;
-        x = ((x - imgOffsetX) / imgDisplayWidth) * img.width;
-        y = ((y - imgOffsetY) / imgDisplayHeight) * img.height;
+
+        const relativeX = x - imgLeft;
+        const relativeY = y - imgTop;
+
+        x = (relativeX / imgDisplayWidth) * img.width;
+        y = (relativeY / imgDisplayHeight) * img.height;
       }
 
       // 如果位置无效，使用默认值
-      if (x === undefined || x === null || isNaN(x)) x = 20;
-      if (y === undefined || y === null || isNaN(y)) y = 20;
+      if (x === undefined || x === null || isNaN(x) || x < 0) x = 20;
+      if (y === undefined || y === null || isNaN(y) || y < 0) y = 20;
 
       ctx.drawImage(watermarkImg, x, y, wmWidth, wmHeight);
       ctx.globalAlpha = 1;
