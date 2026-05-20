@@ -2243,18 +2243,11 @@ async function handleExport(exportFormat) {
   document.body.appendChild(loadingMask);
 
   try {
-    // 获取预览图片元素
-    const previewImg = document.getElementById('watermarkImage') || document.getElementById('previewImage');
-    const wmImg = document.getElementById('watermarkImage');
-
-    // 用于绘制的图片（优先使用预览图片以保持坐标一致）
-    const imgToDraw = wmImg || img;
-
     let exportCanvas = document.createElement('canvas');
-    exportCanvas.width = imgToDraw.width;
-    exportCanvas.height = imgToDraw.height;
+    exportCanvas.width = img.width;
+    exportCanvas.height = img.height;
     const ctx = exportCanvas.getContext('2d');
-    ctx.drawImage(imgToDraw, 0, 0);
+    ctx.drawImage(img, 0, 0);
 
     // 应用水印
     const wm = state.watermark;
@@ -2264,8 +2257,9 @@ async function handleExport(exportFormat) {
       ctx.fillStyle = wm.color;
       ctx.font = `${wm.fontSize}px Inter, sans-serif`;
 
-      // 水印坐标是相对于预览容器的
+      // 水印坐标是相对于预览容器的，需要转换为原图坐标
       const container = document.getElementById('watermarkImageContainer');
+      const wmImg = document.getElementById('watermarkImage');
       let x = wm.x;
       let y = wm.y;
 
@@ -2273,25 +2267,25 @@ async function handleExport(exportFormat) {
         const containerRect = container.getBoundingClientRect();
         const imgRect = wmImg.getBoundingClientRect();
 
-        // 计算图片在容器中的实际位置和尺寸
+        // 计算图片在容器中的实际位置和尺寸（显示尺寸）
         const imgLeft = imgRect.left - containerRect.left;
         const imgTop = imgRect.top - containerRect.top;
-        const imgWidth = imgRect.width;
-        const imgHeight = imgRect.height;
+        const imgDisplayWidth = imgRect.width;
+        const imgDisplayHeight = imgRect.height;
 
-        // 水印位置减去图片偏移，得到相对于图片的位置
+        // 水印位置减去图片偏移，得到相对于图片显示区域的位置
         const relativeX = x - imgLeft;
         const relativeY = y - imgTop;
 
-        // 转换为导出画布的坐标
-        x = (relativeX / imgWidth) * imgToDraw.width;
-        y = (relativeY / imgHeight) * imgToDraw.height;
+        // 转换为原图坐标
+        x = (relativeX / imgDisplayWidth) * img.width;
+        y = (relativeY / imgDisplayHeight) * img.height;
       }
 
       // 如果位置无效，使用默认值
       if (!x || !y || isNaN(x) || isNaN(y) || x < 0 || y < 0) {
         x = 20;
-        y = imgToDraw.height - wm.fontSize - 20;
+        y = img.height - wm.fontSize - 20;
       }
 
       ctx.fillText(wm.text, x, y);
@@ -2327,8 +2321,8 @@ async function handleExport(exportFormat) {
         const relativeX = x - imgLeft;
         const relativeY = y - imgTop;
 
-        x = (relativeX / imgDisplayWidth) * imgToDraw.width;
-        y = (relativeY / imgDisplayHeight) * imgToDraw.height;
+        x = (relativeX / imgDisplayWidth) * img.width;
+        y = (relativeY / imgDisplayHeight) * img.height;
       }
 
       // 如果位置无效，使用默认值
