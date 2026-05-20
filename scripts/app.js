@@ -340,6 +340,9 @@ function renderCompress() {
               <span class="font-body-md text-body-md text-on-secondary-container font-medium">压缩后</span>
               <span class="font-body-md text-body-md text-primary font-bold text-lg" id="compressedSizeLabel">-</span>
             </div>
+            <div class="flex justify-center mt-2">
+              <span class="font-label-md text-label-md text-on-surface-variant" id="compressRatioLabel"></span>
+            </div>
           </div>
         </div>
         <!-- Actions -->
@@ -376,10 +379,37 @@ async function updateCompressPreview() {
   const img = getState('currentImage');
   if (!img) return;
 
-  const estimated = await imageProcessor.estimateCompressedSize(img, state.quality, state.format);
+  const result = await imageProcessor.estimateCompressedSize(img, state.quality, state.format);
   const compressedLabel = document.getElementById('compressedSizeLabel');
+  const originalSize = state.originalSize || 0;
+
   if (compressedLabel) {
-    compressedLabel.textContent = formatSize(estimated);
+    const estimatedSize = result.size;
+    compressedLabel.textContent = formatSize(estimatedSize);
+
+    // 添加颜色提示：如果压缩后比原图大
+    if (originalSize > 0 && estimatedSize > originalSize) {
+      compressedLabel.classList.remove('text-primary');
+      compressedLabel.classList.add('text-error');
+    } else if (originalSize > 0) {
+      compressedLabel.classList.remove('text-error');
+      compressedLabel.classList.add('text-primary');
+    }
+  }
+
+  // 计算压缩率
+  const ratioLabel = document.getElementById('compressRatioLabel');
+  if (ratioLabel && originalSize > 0) {
+    const ratio = Math.round((1 - estimatedSize / originalSize) * 100);
+    if (ratio >= 0) {
+      ratioLabel.textContent = `节省 ${ratio}%`;
+      ratioLabel.classList.remove('text-error');
+      ratioLabel.classList.add('text-primary');
+    } else {
+      ratioLabel.textContent = `增大 ${Math.abs(ratio)}%`;
+      ratioLabel.classList.remove('text-primary');
+      ratioLabel.classList.add('text-error');
+    }
   }
 }
 

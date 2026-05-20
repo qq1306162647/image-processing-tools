@@ -37,18 +37,35 @@ export function rotate(img, degrees) {
 /**
  * 裁切图片
  */
-export function crop(img, x, y, w, h, originWidth, originHeight) {
+export function crop(img, x, y, w, h, originWidth, originHeight, shape = 'rect') {
   const canvas = document.createElement('canvas');
   canvas.width = w;
   canvas.height = h;
   const ctx = canvas.getContext('2d');
 
-  const srcX = (x / originWidth) * img.width;
-  const srcY = (y / originHeight) * img.height;
-  const srcW = (w / originWidth) * img.width;
-  const srcH = (h / originHeight) * img.height;
+  // 使用 naturalWidth/naturalHeight 来计算，因为 img.width/height 可能是 CSS 显示尺寸
+  const srcX = (x / originWidth) * img.naturalWidth;
+  const srcY = (y / originHeight) * img.naturalHeight;
+  const srcW = (w / originWidth) * img.naturalWidth;
+  const srcH = (h / originHeight) * img.naturalHeight;
 
-  ctx.drawImage(img, srcX, srcY, srcW, srcH, 0, 0, w, h);
+  if (shape === 'circle') {
+    // 圆形裁剪 - 使用路径裁剪
+    ctx.clearRect(0, 0, w, h);
+    ctx.save();
+    ctx.beginPath();
+    const centerX = w / 2;
+    const centerY = h / 2;
+    const radius = Math.min(w, h) / 2;
+    ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+    ctx.closePath();
+    ctx.clip();
+    ctx.drawImage(img, srcX, srcY, srcW, srcH, 0, 0, w, h);
+    ctx.restore();
+  } else {
+    ctx.drawImage(img, srcX, srcY, srcW, srcH, 0, 0, w, h);
+  }
+
   return { canvas, width: w, height: h };
 }
 
@@ -80,12 +97,22 @@ export function compress(img, quality, format) {
 
 /**
  * 估算压缩后大小
+ * 返回预估大小和压缩率信息
  */
 export function estimateCompressedSize(img, quality, format) {
   return new Promise((resolve) => {
     const canvas = drawImage(img);
     canvas.toBlob(
-      (blob) => resolve(blob ? blob.size : 0),
+      (blob) => {
+        if (!blob) {
+          resolve({ size: 0, ratio: 0 });
+          return;
+        }
+        // 估算未压缩的大小作为参考
+        const uncompressedSize = img.naturalWidth * img.naturalHeight * 4; // RGBA
+        const ratio = Math.max(0, Math.min(1, blob.size / uncompressedSize));
+        resolve({ size: blob.size, ratio });
+      },
       format,
       quality / 100
     );
