@@ -363,12 +363,18 @@ function setupCompressPanel() {
   const compressSlider = document.getElementById('compressSlider');
   const qualityValue = document.getElementById('qualityValue');
   const downloadBtn = document.getElementById('downloadBtn');
+  let debounceTimer = null;
 
   compressSlider?.addEventListener('input', async (e) => {
     const quality = parseInt(e.target.value);
     setState({ quality });
     qualityValue.textContent = `${quality}%`;
-    await updateCompressPreview();
+
+    // 防抖：清除之前的定时器，等用户停止拖动后再计算
+    if (debounceTimer) clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(() => {
+      updateCompressPreview();
+    }, 150);
   });
 
   downloadBtn?.addEventListener('click', handleExport);
@@ -2275,11 +2281,9 @@ async function handleExport() {
     }
 
     // 获取导出的 blob
-    console.log('Export params:', { format: state.format, quality: state.quality, qualityValue: state.quality / 100 });
     const blob = await new Promise((resolve) => {
       exportCanvas.toBlob(resolve, state.format, state.quality / 100);
     });
-    console.log('Exported blob size:', blob?.size);
 
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
