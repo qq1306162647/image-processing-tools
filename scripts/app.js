@@ -382,30 +382,52 @@ async function updateCompressPreview() {
   const originalSize = state.originalSize || 0;
   if (originalSize === 0) return;
 
-  // 使用滑块的值来估算目标文件大小
-  // 100% = 原图大小，50% = 原图一半，10% = 原图 10%
+  // 创建临时 Canvas 进行真实压缩
+  const canvas = document.createElement('canvas');
+  canvas.width = img.width;
+  canvas.height = img.height;
+  const ctx = canvas.getContext('2d');
+  ctx.drawImage(img, 0, 0);
+
+  // 获取真实压缩后的大小
+  const blob = await new Promise((resolve) => {
+    canvas.toBlob(resolve, state.format, state.quality / 100);
+  });
+
+  if (!blob) return;
+
+  const estimatedSize = blob.size;
   const qualityPercent = state.quality / 100;
-  const estimatedSize = Math.round(originalSize * qualityPercent);
 
   const compressedLabel = document.getElementById('compressedSizeLabel');
   if (compressedLabel) {
     compressedLabel.textContent = formatSize(estimatedSize);
 
-    // 显示预估大小，不需要颜色提示（因为是按比例计算的）
-    compressedLabel.classList.remove('text-error');
-    compressedLabel.classList.add('text-primary');
+    // 根据压缩后大小与原图大小的比较显示不同颜色
+    if (estimatedSize > originalSize) {
+      compressedLabel.classList.remove('text-primary');
+      compressedLabel.classList.add('text-error');
+    } else {
+      compressedLabel.classList.remove('text-error');
+      compressedLabel.classList.add('text-primary');
+    }
   }
 
   // 计算节省比例
   const ratioLabel = document.getElementById('compressRatioLabel');
   if (ratioLabel) {
-    const saved = Math.round((1 - qualityPercent) * 100);
-    if (saved >= 0) {
-      ratioLabel.textContent = `节省 ${saved}%`;
+    const savedPercent = Math.round((1 - estimatedSize / originalSize) * 100);
+    if (savedPercent > 0) {
+      ratioLabel.textContent = `节省 ${savedPercent}%`;
       ratioLabel.classList.remove('text-error');
       ratioLabel.classList.add('text-primary');
+    } else if (savedPercent < 0) {
+      ratioLabel.textContent = `增大 ${Math.abs(savedPercent)}%`;
+      ratioLabel.classList.remove('text-primary');
+      ratioLabel.classList.add('text-error');
     } else {
-      ratioLabel.textContent = '';
+      ratioLabel.textContent = '大小相同';
+      ratioLabel.classList.remove('text-error', 'text-primary');
     }
   }
 }
@@ -2253,9 +2275,11 @@ async function handleExport() {
     }
 
     // 获取导出的 blob
+    console.log('Export params:', { format: state.format, quality: state.quality, qualityValue: state.quality / 100 });
     const blob = await new Promise((resolve) => {
       exportCanvas.toBlob(resolve, state.format, state.quality / 100);
     });
+    console.log('Exported blob size:', blob?.size);
 
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');

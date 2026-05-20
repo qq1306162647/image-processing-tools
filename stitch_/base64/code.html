@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+
+<html class="light" lang="zh-CN"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>图灵工具 - Base64转换</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary-fixed-dim": "#b4c5ff",
+                        "surface-dim": "#d8dadc",
+                        "secondary-fixed-dim": "#b7c8e1",
+                        "on-surface": "#191c1e",
+                        "secondary-fixed": "#d3e4fe",
+                        "on-primary-fixed-variant": "#003ea8",
+                        "secondary-container": "#d0e1fb",
+                        "tertiary": "#943700",
+                        "surface": "#f7f9fb",
+                        "inverse-primary": "#b4c5ff",
+                        "inverse-on-surface": "#eff1f3",
+                        "outline-variant": "#c3c6d7",
+                        "primary": "#004ac6",
+                        "on-secondary-fixed": "#0b1c30",
+                        "primary-container": "#2563eb",
+                        "tertiary-container": "#bc4800",
+                        "on-surface-variant": "#434655",
+                        "surface-tint": "#0053db",
+                        "on-primary-container": "#eeefff",
+                        "on-secondary-fixed-variant": "#38485d",
+                        "background": "#f7f9fb",
+                        "tertiary-fixed": "#ffdbcd",
+                        "error": "#ba1a1a",
+                        "on-primary-fixed": "#00174b",
+                        "surface-container": "#eceef0",
+                        "on-error-container": "#93000a",
+                        "surface-container-highest": "#e0e3e5",
+                        "surface-variant": "#e0e3e5",
+                        "on-tertiary": "#ffffff",
+                        "surface-container-high": "#e6e8ea",
+                        "on-tertiary-fixed": "#360f00",
+                        "on-primary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "on-tertiary-fixed-variant": "#7d2d00",
+                        "secondary": "#505f76",
+                        "surface-bright": "#f7f9fb",
+                        "tertiary-fixed-dim": "#ffb596",
+                        "on-background": "#191c1e",
+                        "inverse-surface": "#2d3133",
+                        "outline": "#737686",
+                        "on-secondary": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "primary-fixed": "#dbe1ff",
+                        "on-tertiary-container": "#ffede6",
+                        "error-container": "#ffdad6",
+                        "on-secondary-container": "#54647a",
+                        "surface-container-low": "#f2f4f6"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "header-height": "64px",
+                        "gutter": "16px",
+                        "md": "16px",
+                        "xl": "32px",
+                        "sm": "8px",
+                        "xs": "4px",
+                        "lg": "24px",
+                        "base": "4px",
+                        "sidebar-width": "260px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "label-md": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "button-text": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["30px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "700" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500" }],
+                        "headline-md": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "button-text": ["14px", { "lineHeight": "20px", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen flex antialiased">
+<!-- Desktop Side Navigation -->
+<nav class="hidden md:flex flex-col h-full w-[260px] p-md gap-xs border-r border-outline-variant bg-surface shrink-0 z-40 fixed left-0 top-0 overflow-y-auto">
+<div class="flex items-center gap-sm px-sm py-md mb-md">
+<div class="w-8 h-8 rounded bg-primary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-on-primary" style="font-variation-settings: 'FILL' 1;">widgets</span>
+</div>
+<div>
+<h1 class="font-headline-md text-headline-md font-bold text-primary">图灵工具</h1>
+<p class="font-label-md text-label-md text-on-surface-variant">专业图像处理</p>
+</div>
+</div>
+<div class="flex flex-col gap-xs flex-1">
+<a class="text-on-surface-variant flex items-center px-md py-sm rounded-lg hover:bg-surface-container-highest transition-colors group" href="#">
+<span class="material-symbols-outlined mr-md text-on-surface-variant group-hover:text-on-surface transition-colors">dashboard</span>
+<span class="font-button-text text-button-text">控制台</span>
+</a>
+<a class="text-on-surface-variant flex items-center px-md py-sm rounded-lg hover:bg-surface-container-highest transition-colors group" href="#">
+<span class="material-symbols-outlined mr-md text-on-surface-variant group-hover:text-on-surface transition-colors">transform</span>
+<span class="font-button-text text-button-text">格式转换</span>
+</a>
+<a class="text-on-surface-variant flex items-center px-md py-sm rounded-lg hover:bg-surface-container-highest transition-colors group" href="#">
+<span class="material-symbols-outlined mr-md text-on-surface-variant group-hover:text-on-surface transition-colors">crop</span>
+<span class="font-button-text text-button-text">图片裁剪</span>
+</a>
+<a class="text-on-surface-variant flex items-center px-md py-sm rounded-lg hover:bg-surface-container-highest transition-colors group" href="#">
+<span class="material-symbols-outlined mr-md text-on-surface-variant group-hover:text-on-surface transition-colors">aspect_ratio</span>
+<span class="font-button-text text-button-text">尺寸调整</span>
+</a>
+<a class="text-on-surface-variant flex items-center px-md py-sm rounded-lg hover:bg-surface-container-highest transition-colors group" href="#">
+<span class="material-symbols-outlined mr-md text-on-surface-variant group-hover:text-on-surface transition-colors">compress</span>
+<span class="font-button-text text-button-text">图片压缩</span>
+</a>
+<a class="text-on-surface-variant flex items-center px-md py-sm rounded-lg hover:bg-surface-container-highest transition-colors group" href="#">
+<span class="material-symbols-outlined mr-md text-on-surface-variant group-hover:text-on-surface transition-colors">branding_watermark</span>
+<span class="font-button-text text-button-text">水印工具</span>
+</a>
+<!-- Active Tab -->
+<a class="bg-primary-container text-on-primary-container rounded-lg font-bold flex items-center px-md py-sm active:scale-[0.95] transition-transform duration-150" href="#">
+<span class="material-symbols-outlined mr-md text-on-primary-container" style="font-variation-settings: 'FILL' 1;">code</span>
+<span class="font-button-text text-button-text">Base64转换</span>
+</a>
+<a class="text-on-surface-variant flex items-center px-md py-sm rounded-lg hover:bg-surface-container-highest transition-colors group" href="#">
+<span class="material-symbols-outlined mr-md text-on-surface-variant group-hover:text-on-surface transition-colors">rotate_right</span>
+<span class="font-button-text text-button-text">旋转工具</span>
+</a>
+</div>
+<div class="mt-auto flex flex-col gap-sm pt-md border-t border-outline-variant">
+<button class="w-full bg-primary-container text-on-primary-container font-button-text text-button-text py-sm rounded-lg hover:bg-primary hover:text-on-primary transition-colors flex items-center justify-center gap-xs">
+<span class="material-symbols-outlined text-[18px]">workspace_premium</span>
+                升级专业版
+            </button>
+<div class="flex flex-col gap-xs mt-sm">
+<a class="text-on-surface-variant flex items-center px-md py-sm rounded-lg hover:bg-surface-container-highest transition-colors group" href="#">
+<span class="material-symbols-outlined mr-md text-on-surface-variant group-hover:text-on-surface transition-colors">settings</span>
+<span class="font-button-text text-button-text">设置</span>
+</a>
+<a class="text-on-surface-variant flex items-center px-md py-sm rounded-lg hover:bg-surface-container-highest transition-colors group" href="#">
+<span class="material-symbols-outlined mr-md text-on-surface-variant group-hover:text-on-surface transition-colors">logout</span>
+<span class="font-button-text text-button-text">退出登录</span>
+</a>
+</div>
+</div>
+</nav>
+<!-- Main Content Wrapper -->
+<div class="flex-1 flex flex-col md:ml-[260px] min-h-screen">
+<!-- Mobile Top App Bar -->
+<header class="md:hidden flex justify-between items-center h-[64px] px-xl w-full sticky top-0 z-50 bg-surface-container-lowest border-b border-outline-variant shadow-sm">
+<div class="flex items-center gap-sm">
+<div class="w-8 h-8 rounded bg-primary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-on-primary" style="font-variation-settings: 'FILL' 1;">widgets</span>
+</div>
+<span class="font-headline-md text-headline-md font-bold text-primary">图灵工具</span>
+</div>
+<!-- Navigation Links (Hidden on small mobile, visible on larger tablets if needed, but per prompt spec they are just here) -->
+<div class="hidden sm:flex items-center gap-lg">
+<a class="text-on-surface-variant font-button-text text-button-text hover:text-primary transition-colors" href="#">帮助</a>
+<a class="text-on-surface-variant font-button-text text-button-text hover:text-primary transition-colors" href="#">文档</a>
+<a class="text-on-surface-variant font-button-text text-button-text hover:text-primary transition-colors" href="#">定价</a>
+</div>
+<div class="flex items-center gap-sm">
+<button class="p-sm text-on-surface-variant hover:bg-surface-container-high rounded-full transition-colors hidden sm:flex">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="p-sm text-on-surface-variant hover:bg-surface-container-high rounded-full transition-colors hidden sm:flex">
+<span class="material-symbols-outlined">settings</span>
+</button>
+<button class="hidden sm:flex bg-primary text-on-primary font-button-text text-button-text px-md py-sm rounded-lg hover:bg-surface-tint transition-colors ml-sm">
+                    上传图片
+                </button>
+<!-- Mobile Menu Toggle -->
+<button class="p-sm text-on-surface hover:bg-surface-container-high rounded-full transition-colors sm:hidden">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</div>
+</header>
+<!-- Canvas Area -->
+<main class="flex-1 p-md md:p-xl w-full max-w-[1440px] mx-auto flex flex-col gap-lg">
+<!-- Page Header -->
+<div class="flex flex-col gap-xs mb-sm">
+<h2 class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface">Base64 图片转换</h2>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-2xl">
+                    在本地快速将图片文件转换为 Base64 字符串，或将 Base64 代码还原为图片进行预览。所有处理均在浏览器端完成，安全无风险。
+                </p>
+</div>
+<!-- Two Column Layout Container -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-lg flex-1 min-h-[500px]">
+<!-- Left Column: Image Area -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl shadow-sm p-lg flex flex-col gap-md relative overflow-hidden group">
+<div class="flex justify-between items-center pb-sm border-b border-surface-container-highest">
+<h3 class="font-headline-md text-[18px] text-on-surface flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary">image</span>
+                            图片预览 / 上传
+                        </h3>
+<div class="flex gap-sm">
+<button class="px-md py-sm bg-surface hover:bg-surface-container border border-outline-variant text-on-surface font-button-text text-button-text rounded-lg transition-colors flex items-center gap-xs">
+<span class="material-symbols-outlined text-[18px]">download</span>
+                                下载图片
+                            </button>
+<button class="px-md py-sm bg-primary text-on-primary font-button-text text-button-text rounded-lg hover:bg-surface-tint transition-colors shadow-sm flex items-center gap-xs">
+<span class="material-symbols-outlined text-[18px]">upload</span>
+                                选择图片
+                            </button>
+</div>
+</div>
+<!-- Upload Dropzone / Preview Area -->
+<div class="flex-1 border-2 border-dashed border-outline-variant rounded-lg bg-surface flex flex-col items-center justify-center p-xl text-center hover:border-primary hover:bg-surface-container-lowest transition-all cursor-pointer relative group-hover:border-primary-fixed-dim">
+<!-- Empty State Content -->
+<div class="flex flex-col items-center gap-sm text-on-surface-variant">
+<div class="w-16 h-16 rounded-full bg-surface-container-highest flex items-center justify-center mb-sm">
+<span class="material-symbols-outlined text-[32px] text-outline">add_photo_alternate</span>
+</div>
+<p class="font-body-lg text-body-lg text-on-surface font-medium">点击或拖拽图片至此处</p>
+<p class="font-body-md text-body-md text-outline">支持 JPG, PNG, WEBP, SVG 格式 (最大 5MB)</p>
+</div>
+<!-- Hidden Input -->
+<input accept="image/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" type="file"/>
+</div>
+<div class="font-label-md text-label-md text-outline flex justify-between">
+<span>尺寸: -</span>
+<span>大小: -</span>
+</div>
+</div>
+<!-- Right Column: Base64 Text Area -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl shadow-sm p-lg flex flex-col gap-md">
+<div class="flex justify-between items-center pb-sm border-b border-surface-container-highest">
+<h3 class="font-headline-md text-[18px] text-on-surface flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary">data_object</span>
+                            Base64 编码
+                        </h3>
+<div class="flex gap-sm">
+<button class="p-sm text-on-surface-variant hover:bg-surface-container hover:text-error rounded-md transition-colors" title="清空内容">
+<span class="material-symbols-outlined">delete</span>
+</button>
+</div>
+</div>
+<!-- Textarea Container -->
+<div class="flex-1 relative flex flex-col">
+<textarea class="flex-1 w-full resize-none p-md bg-surface border border-outline-variant rounded-lg font-body-md text-body-md text-on-surface placeholder:text-outline focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all font-mono" placeholder="在此处粘贴 Base64 代码以生成图片，或在此处查看生成的 Base64 编码..."></textarea>
+<!-- Format Options (Optional utility) -->
+<div class="absolute top-sm right-sm flex gap-xs">
+<div class="flex items-center gap-xs bg-surface-container-lowest px-sm py-xs rounded border border-outline-variant text-label-md text-on-surface-variant">
+<input checked="" class="rounded border-outline-variant text-primary focus:ring-primary" id="prefix" type="checkbox"/>
+<label class="cursor-pointer" for="prefix">包含 Data URI 前缀</label>
+</div>
+</div>
+</div>
+<!-- Action Bar -->
+<div class="flex justify-end pt-sm">
+<button class="px-xl py-sm bg-primary text-on-primary font-button-text text-button-text rounded-lg hover:bg-surface-tint transition-colors shadow-sm flex items-center gap-sm active:scale-[0.98]">
+<span class="material-symbols-outlined">content_copy</span>
+                            复制代码
+                        </button>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

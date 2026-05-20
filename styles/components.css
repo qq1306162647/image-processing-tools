@@ -1,190 +1,235 @@
-/* 按钮 */
+/* ========== 按钮 - Stitch Design ========== */
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: var(--space-xs);
-  padding: var(--space-sm) var(--space-md);
-  border-radius: var(--radius);
-  font-size: 0.875rem;
-  font-weight: 500;
+  gap: 4px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  height: 36px;
   border: none;
-  transition: all 0.2s;
+  transition: all 0.15s;
+  cursor: pointer;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
 .btn:active {
   transform: scale(0.98);
 }
 
-.btn-primary {
-  background: var(--color-primary);
-  color: var(--color-on-primary);
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
-.btn-primary:hover {
-  background: var(--color-primary-hover);
+.btn-primary {
+  background: #004ac6;
+  color: #ffffff;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: #003ba3;
 }
 
 .btn-secondary {
-  background: var(--color-surface);
-  color: var(--color-primary);
-  border: 1px solid var(--color-outline);
+  background: #f7f9fb;
+  color: #004ac6;
+  border: 1px solid #c3c6d7;
 }
 
-.btn-secondary:hover {
-  background: var(--color-surface-container);
+.btn-secondary:hover:not(:disabled) {
+  background: #e6e8ea;
 }
 
-/* 输入框 */
+/* ========== 输入框 - Stitch Design ========== */
 .input {
   width: 100%;
   height: 40px;
-  padding: 0 var(--space-sm);
-  background: var(--color-surface);
-  border: 1px solid var(--color-outline-variant);
-  border-radius: var(--radius);
-  font-size: 0.875rem;
-  transition: border-color 0.2s;
+  padding: 0 12px;
+  background: #f7f9fb;
+  border: 1px solid #c3c6d7;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #191c1e;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
 .input:focus {
   outline: none;
-  border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  border-color: #004ac6;
+  box-shadow: 0 0 0 3px rgba(0, 74, 198, 0.15);
 }
 
-/* 滑块 */
+.input::placeholder {
+  color: #434655;
+}
+
+/* ========== 滑块 - Stitch Design ========== */
 .slider {
   width: 100%;
-  height: 6px;
-  border-radius: var(--radius-full);
-  background: var(--color-surface-container);
+  height: 4px;
+  border-radius: 2px;
+  background: #e0e3e5;
   appearance: none;
   cursor: pointer;
 }
 
 .slider::-webkit-slider-thumb {
   appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #004ac6;
+  cursor: pointer;
+  border: none;
+  margin-top: -6px;
+}
+
+.slider::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 4px;
+  cursor: pointer;
+  background: #e0e3e5;
+  border-radius: 2px;
+}
+
+/* ========== 复选框 ========== */
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #191c1e;
+}
+
+.checkbox-label input[type="checkbox"] {
   width: 18px;
   height: 18px;
-  border-radius: 50%;
-  background: var(--color-primary);
+  accent-color: #004ac6;
   cursor: pointer;
 }
 
-/* 卡片 */
+/* ========== 卡片 - Stitch Design ========== */
 .card {
-  background: var(--color-surface);
-  border: 1px solid var(--color-outline-variant);
-  border-radius: var(--radius-md);
-  padding: var(--space-lg);
+  background: #f7f9fb;
+  border: 1px solid #c3c6d7;
+  border-radius: 12px;
+  padding: 16px;
+  transition: box-shadow 0.15s;
 }
 
 .card:hover {
-  box-shadow: var(--shadow-sm);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
 }
 
-/* 空状态 */
-.empty-state {
-  border: 2px dashed var(--color-outline-variant);
-  border-radius: var(--radius-lg);
-  padding: var(--space-xl);
-  text-align: center;
-  color: var(--color-secondary);
-}
-
-/* Tab 面板 */
-.tab-panel {
-  display: none;
-}
-
-.tab-panel.active {
-  display: block;
-}
-
-/* 工具面板 */
-.tool-panel {
-  width: 300px;
-  background: var(--color-surface);
-  border-left: 1px solid var(--color-outline-variant);
-  padding: var(--space-lg);
-  overflow-y: auto;
-}
-
+/* ========== 工具面板内容 ========== */
 .tool-panel h3 {
-  margin-bottom: var(--space-md);
-  font-size: 1rem;
+  margin-bottom: 16px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #191c1e;
 }
 
 .tool-group {
-  margin-bottom: var(--space-lg);
+  margin-bottom: 24px;
 }
 
 .tool-group label {
   display: block;
-  margin-bottom: var(--space-xs);
-  font-size: 0.75rem;
+  margin-bottom: 8px;
+  font-size: 14px;
   font-weight: 500;
-  color: var(--color-secondary);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+  color: #191c1e;
 }
 
-/* 位置网格 */
+/* ========== 位置网格 - 9宫格 ========== */
 .position-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: var(--space-xs);
+  gap: 4px;
 }
 
 .pos-btn {
-  padding: var(--space-sm);
-  background: var(--color-surface-container);
-  border: 2px solid transparent;
-  border-radius: var(--radius);
-  font-size: 0.75rem;
+  padding: 8px;
+  background: #f7f9fb;
+  border: 1px solid #c3c6d7;
+  border-radius: 8px;
+  font-size: 12px;
   cursor: pointer;
+  transition: all 0.15s;
+  color: #434655;
+  text-align: center;
+}
+
+.pos-btn:hover {
+  border-color: #004ac6;
+  color: #004ac6;
+  background: #dbe1ff;
 }
 
 .pos-btn.active {
-  border-color: var(--color-primary);
-  color: var(--color-primary);
+  border-color: #004ac6;
+  color: #004ac6;
+  background: #dbe1ff;
 }
 
-/* 形状按钮组 */
+/* ========== 形状按钮组 ========== */
 .shape-btns {
   display: flex;
-  gap: var(--space-xs);
+  gap: 4px;
+  background: #f2f4f6;
+  padding: 4px;
+  border-radius: 8px;
+  border: 1px solid #c3c6d7;
 }
 
 .shape-btn {
   flex: 1;
-  padding: var(--space-sm);
-  background: var(--color-surface-container);
-  border: 2px solid transparent;
-  border-radius: var(--radius);
+  padding: 8px;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
   cursor: pointer;
+  font-size: 14px;
+  color: #434655;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.shape-btn:hover {
+  background: #e6e8ea;
+  color: #191c1e;
 }
 
 .shape-btn.active {
-  border-color: var(--color-primary);
-  color: var(--color-primary);
+  background: #ffffff;
+  color: #004ac6;
+  font-weight: 600;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.1);
 }
 
-/* 裁切覆盖层 */
+/* ========== 裁切覆盖层 ========== */
 .crop-overlay {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
   pointer-events: none;
 }
 
 .crop-selection {
   position: absolute;
-  border: 2px dashed var(--color-primary);
-  background: rgba(37, 99, 235, 0.1);
+  border: 2px dashed #004ac6;
+  background: rgba(0, 74, 198, 0.1);
   cursor: move;
   pointer-events: all;
 }
@@ -195,14 +240,139 @@
 
 .resize-handle {
   position: absolute;
-  width: 10px;
-  height: 10px;
-  background: var(--color-primary);
-  border: 2px solid var(--color-surface);
-  border-radius: 2px;
+  width: 12px;
+  height: 12px;
+  background: #ffffff;
+  border: 2px solid #004ac6;
+  border-radius: 50%;
 }
 
-.resize-handle.nw { top: -5px; left: -5px; cursor: nw-resize; }
-.resize-handle.ne { top: -5px; right: -5px; cursor: ne-resize; }
-.resize-handle.sw { bottom: -5px; left: -5px; cursor: sw-resize; }
-.resize-handle.se { bottom: -5px; right: -5px; cursor: se-resize; }
+.resize-handle.nw { top: -6px; left: -6px; cursor: nwse-resize; }
+.resize-handle.ne { top: -6px; right: -6px; cursor: nesw-resize; }
+.resize-handle.sw { bottom: -6px; left: -6px; cursor: nesw-resize; }
+.resize-handle.se { bottom: -6px; right: -6px; cursor: nwse-resize; }
+.resize-handle.n { top: -6px; left: 50%; transform: translateX(-50%); cursor: ns-resize; }
+.resize-handle.s { bottom: -6px; left: 50%; transform: translateX(-50%); cursor: ns-resize; }
+.resize-handle.e { right: -6px; top: 50%; transform: translateY(-50%); cursor: ew-resize; }
+.resize-handle.w { left: -6px; top: 50%; transform: translateY(-50%); cursor: ew-resize; }
+
+/* ========== 颜色选择器 ========== */
+input[type="color"] {
+  width: 100%;
+  height: 40px;
+  padding: 4px;
+  border: 1px solid #c3c6d7;
+  border-radius: 8px;
+  cursor: pointer;
+  background: #f7f9fb;
+}
+
+input[type="color"]::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+input[type="color"]::-webkit-color-swatch {
+  border: none;
+  border-radius: 4px;
+}
+
+/* ========== 文本域 ========== */
+textarea.input {
+  height: auto;
+  min-height: 100px;
+  padding: 12px;
+  resize: vertical;
+  line-height: 1.5;
+}
+
+/* ========== 选择框 ========== */
+select.input {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23434655' d='M6 8L2 4h8z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 36px;
+  cursor: pointer;
+}
+
+/* ========== 预设网格 ========== */
+.preset-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+
+.preset-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 12px;
+  background: #f7f9fb;
+  border: 1px solid #c3c6d7;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.preset-btn:hover {
+  border-color: #004ac6;
+  background: #dbe1ff;
+}
+
+.preset-btn:hover .preset-name {
+  color: #004ac6;
+}
+
+.preset-btn:hover .preset-size {
+  color: rgba(0, 74, 198, 0.7);
+}
+
+.preset-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #191c1e;
+}
+
+.preset-size {
+  font-size: 11px;
+  color: #434655;
+  margin-top: 2px;
+}
+
+/* ========== 裁切纵横比按钮 ========== */
+.aspect-btn {
+  padding: 8px;
+  background: #f7f9fb;
+  border: 1px solid #c3c6d7;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #434655;
+  cursor: pointer;
+  transition: all 0.15s;
+  text-align: center;
+}
+
+.aspect-btn:hover {
+  border-color: #004ac6;
+  color: #004ac6;
+}
+
+.aspect-btn.active {
+  border-color: #004ac6;
+  background: #dbe1ff;
+  color: #004ac6;
+  font-weight: 600;
+}
+
+/* ========== 工具提示 ========== */
+.tool-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tool-info svg {
+  width: 16px;
+  height: 16px;
+  color: #434655;
+}

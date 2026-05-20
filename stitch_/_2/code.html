@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>图灵工具 - 尺寸调整</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "primary-fixed-dim": "#b4c5ff",
+                    "surface-dim": "#d8dadc",
+                    "secondary-fixed-dim": "#b7c8e1",
+                    "on-surface": "#191c1e",
+                    "secondary-fixed": "#d3e4fe",
+                    "on-primary-fixed-variant": "#003ea8",
+                    "secondary-container": "#d0e1fb",
+                    "tertiary": "#943700",
+                    "surface": "#f7f9fb",
+                    "inverse-primary": "#b4c5ff",
+                    "inverse-on-surface": "#eff1f3",
+                    "outline-variant": "#c3c6d7",
+                    "primary": "#004ac6",
+                    "on-secondary-fixed": "#0b1c30",
+                    "primary-container": "#2563eb",
+                    "tertiary-container": "#bc4800",
+                    "on-surface-variant": "#434655",
+                    "surface-tint": "#0053db",
+                    "on-primary-container": "#eeefff",
+                    "on-secondary-fixed-variant": "#38485d",
+                    "background": "#f7f9fb",
+                    "tertiary-fixed": "#ffdbcd",
+                    "error": "#ba1a1a",
+                    "on-primary-fixed": "#00174b",
+                    "surface-container": "#eceef0",
+                    "on-error-container": "#93000a",
+                    "surface-container-highest": "#e0e3e5",
+                    "surface-variant": "#e0e3e5",
+                    "on-tertiary": "#ffffff",
+                    "surface-container-high": "#e6e8ea",
+                    "on-tertiary-fixed": "#360f00",
+                    "on-primary": "#ffffff",
+                    "on-error": "#ffffff",
+                    "on-tertiary-fixed-variant": "#7d2d00",
+                    "secondary": "#505f76",
+                    "surface-bright": "#f7f9fb",
+                    "tertiary-fixed-dim": "#ffb596",
+                    "on-background": "#191c1e",
+                    "inverse-surface": "#2d3133",
+                    "outline": "#737686",
+                    "on-secondary": "#ffffff",
+                    "surface-container-lowest": "#ffffff",
+                    "primary-fixed": "#dbe1ff",
+                    "on-tertiary-container": "#ffede6",
+                    "error-container": "#ffdad6",
+                    "on-secondary-container": "#54647a",
+                    "surface-container-low": "#f2f4f6"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "header-height": "64px",
+                    "gutter": "16px",
+                    "md": "16px",
+                    "xl": "32px",
+                    "sm": "8px",
+                    "xs": "4px",
+                    "lg": "24px",
+                    "base": "4px",
+                    "sidebar-width": "260px"
+            },
+            "fontFamily": {
+                    "headline-lg": ["Inter"],
+                    "headline-lg-mobile": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "body-md": ["Inter"],
+                    "label-md": ["Inter"],
+                    "headline-md": ["Inter"],
+                    "button-text": ["Inter"]
+            },
+            "fontSize": {
+                    "headline-lg": ["30px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                    "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "700" }],
+                    "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                    "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                    "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500" }],
+                    "headline-md": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                    "button-text": ["14px", { "lineHeight": "20px", "fontWeight": "600" }]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        body { background-color: #f7f9fb; }
+        /* Subtle checkerboard pattern for image background transparency context */
+        .bg-checker {
+            background-color: #f2f4f6;
+            background-image: 
+                linear-gradient(45deg, #e6e8ea 25%, transparent 25%, transparent 75%, #e6e8ea 75%, #e6e8ea), 
+                linear-gradient(45deg, #e6e8ea 25%, transparent 25%, transparent 75%, #e6e8ea 75%, #e6e8ea);
+            background-size: 20px 20px;
+            background-position: 0 0, 10px 10px;
+        }
+    </style>
+</head>
+<body class="font-body-md text-body-md text-on-surface h-screen flex overflow-hidden">
+<!-- SideNavBar (Shared Component) -->
+<nav class="fixed left-0 top-0 h-full w-[260px] bg-surface border-r border-outline-variant flex flex-col p-md gap-xs z-50">
+<!-- Header -->
+<div class="flex items-center gap-sm mb-lg px-xs">
+<div class="w-10 h-10 rounded-lg bg-primary-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-on-primary-container" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+</div>
+<div class="flex flex-col">
+<span class="font-headline-md text-headline-md font-bold text-primary">图灵工具</span>
+<span class="font-label-md text-label-md text-on-surface-variant">专业图像处理</span>
+</div>
+</div>
+<!-- Navigation Links -->
+<div class="flex-1 flex flex-col gap-xs overflow-y-auto">
+<!-- 0: 控制台 -->
+<a class="text-on-surface-variant flex items-center px-md py-sm rounded-lg hover:bg-surface-container-highest transition-colors active:scale-[0.95] duration-150" href="#">
+<span class="material-symbols-outlined mr-md">dashboard</span>
+                控制台
+            </a>
+<!-- 1: 格式转换 -->
+<a class="text-on-surface-variant flex items-center px-md py-sm rounded-lg hover:bg-surface-container-highest transition-colors active:scale-[0.95] duration-150" href="#">
+<span class="material-symbols-outlined mr-md">transform</span>
+                格式转换
+            </a>
+<!-- 2: 图片裁剪 -->
+<a class="text-on-surface-variant flex items-center px-md py-sm rounded-lg hover:bg-surface-container-highest transition-colors active:scale-[0.95] duration-150" href="#">
+<span class="material-symbols-outlined mr-md">crop</span>
+                图片裁剪
+            </a>
+<!-- 3: 尺寸调整 (ACTIVE) -->
+<a class="bg-primary-container text-on-primary-container rounded-lg font-bold flex items-center px-md py-sm hover:bg-surface-container-highest transition-colors active:scale-[0.95] duration-150" href="#">
+<span class="material-symbols-outlined mr-md" style="font-variation-settings: 'FILL' 1;">aspect_ratio</span>
+                尺寸调整
+            </a>
+<!-- 4: 图片压缩 -->
+<a class="text-on-surface-variant flex items-center px-md py-sm rounded-lg hover:bg-surface-container-highest transition-colors active:scale-[0.95] duration-150" href="#">
+<span class="material-symbols-outlined mr-md">compress</span>
+                图片压缩
+            </a>
+<!-- 5: 水印工具 -->
+<a class="text-on-surface-variant flex items-center px-md py-sm rounded-lg hover:bg-surface-container-highest transition-colors active:scale-[0.95] duration-150" href="#">
+<span class="material-symbols-outlined mr-md">branding_watermark</span>
+                水印工具
+            </a>
+<!-- 6: Base64转换 -->
+<a class="text-on-surface-variant flex items-center px-md py-sm rounded-lg hover:bg-surface-container-highest transition-colors active:scale-[0.95] duration-150" href="#">
+<span class="material-symbols-outlined mr-md">code</span>
+                Base64转换
+            </a>
+<!-- 7: 旋转工具 -->
+<a class="text-on-surface-variant flex items-center px-md py-sm rounded-lg hover:bg-surface-container-highest transition-colors active:scale-[0.95] duration-150" href="#">
+<span class="material-symbols-outlined mr-md">rotate_right</span>
+                旋转工具
+            </a>
+</div>
+<!-- CTA & Footer -->
+<div class="mt-auto flex flex-col gap-sm pt-md border-t border-outline-variant">
+<button class="w-full py-2 bg-secondary-container text-on-primary-fixed-variant font-button-text text-button-text rounded-lg hover:bg-secondary-fixed transition-colors">
+                升级专业版
+            </button>
+<a class="text-on-surface-variant flex items-center px-md py-sm rounded-lg hover:bg-surface-container-highest transition-colors" href="#">
+<span class="material-symbols-outlined mr-md">settings</span>
+                设置
+            </a>
+<a class="text-on-surface-variant flex items-center px-md py-sm rounded-lg hover:bg-surface-container-highest transition-colors" href="#">
+<span class="material-symbols-outlined mr-md">logout</span>
+                退出登录
+            </a>
+</div>
+</nav>
+<!-- Main Content Wrapper -->
+<div class="flex-1 flex flex-col ml-[260px] h-screen bg-surface-container-low">
+<!-- TopAppBar (Shared Component) -->
+<header class="bg-surface-container-lowest border-b border-outline-variant shadow-sm flex justify-between items-center h-[64px] px-xl w-full sticky top-0 z-40">
+<!-- Left: Search Bar -->
+<div class="flex items-center w-64 h-10 bg-surface-container rounded-full px-4 border border-transparent focus-within:border-primary focus-within:bg-surface-container-lowest transition-all">
+<span class="material-symbols-outlined text-on-surface-variant">search</span>
+<input class="bg-transparent border-none focus:ring-0 w-full text-body-md text-on-surface placeholder:text-on-surface-variant ml-2" placeholder="搜索工具或文件..." type="text"/>
+</div>
+<!-- Right: Links & Actions -->
+<div class="flex items-center gap-lg">
+<nav class="flex items-center gap-md">
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" href="#">帮助</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" href="#">文档</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" href="#">定价</a>
+</nav>
+<div class="w-px h-6 bg-outline-variant"></div>
+<div class="flex items-center gap-sm">
+<button class="w-10 h-10 rounded-full hover:bg-surface-container-high flex items-center justify-center text-on-surface-variant transition-colors active:scale-[0.98]">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="w-10 h-10 rounded-full hover:bg-surface-container-high flex items-center justify-center text-on-surface-variant transition-colors active:scale-[0.98]">
+<span class="material-symbols-outlined">settings</span>
+</button>
+</div>
+<button class="bg-primary text-on-primary font-button-text text-button-text px-4 py-2 rounded-lg hover:bg-on-primary-fixed-variant transition-colors active:scale-[0.98] shadow-sm">
+                    上传图片
+                </button>
+<div class="w-9 h-9 rounded-full bg-secondary-fixed overflow-hidden border border-outline-variant cursor-pointer">
+<img alt="用户头像" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAxw1LGBcVncITLZXaZxcmUAnmdYzTZig5U2SnsGccShmL1vddzbKUnfdbVTmHJaP4GsvIH7sz2vHSXZL7hpeLy_Dky8JDX8PciTbmFu701gzpLkZ7lLQMaI4ET3XXcMOvCJPoyzAV1SCgPHicnTw34ppC9NwOW8pBkcGxdFeN5i4G8wnI8T-hhOu2aCZnZlW4STgTnzkqZgot2V7MCIhlwJ2klO80fng2fOHxCoMX_qqcr8NHFUvb-BxZUaoEfC7RTzSIVrln8pZQ"/>
+</div>
+</div>
+</header>
+<!-- Tool Workspace -->
+<main class="flex-1 flex gap-xl p-xl overflow-hidden">
+<!-- Canvas / Preview Area -->
+<section class="flex-1 flex flex-col bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm overflow-hidden relative">
+<!-- Toolbar for preview -->
+<div class="h-12 border-b border-outline-variant flex items-center px-md justify-between bg-surface">
+<span class="font-label-md text-label-md text-on-surface-variant">原始文件: landscape_photo.jpg (4.2 MB)</span>
+<div class="flex items-center gap-xs">
+<button class="w-8 h-8 rounded hover:bg-surface-container-high flex items-center justify-center text-on-surface-variant"><span class="material-symbols-outlined text-[18px]">zoom_out</span></button>
+<span class="font-label-md text-label-md text-on-surface w-12 text-center">45%</span>
+<button class="w-8 h-8 rounded hover:bg-surface-container-high flex items-center justify-center text-on-surface-variant"><span class="material-symbols-outlined text-[18px]">zoom_in</span></button>
+<div class="w-px h-4 bg-outline-variant mx-1"></div>
+<button class="w-8 h-8 rounded hover:bg-surface-container-high flex items-center justify-center text-on-surface-variant" title="适应屏幕"><span class="material-symbols-outlined text-[18px]">fit_screen</span></button>
+</div>
+</div>
+<!-- Image Container -->
+<div class="flex-1 overflow-auto bg-checker flex items-center justify-center p-xl relative">
+<!-- The Image -->
+<img alt="Preview" class="max-w-full max-h-full object-contain shadow-md border border-outline-variant" data-alt="A breathtaking, high-resolution landscape photography piece capturing a misty mountain range at dawn. The scene is bathed in cool, ethereal blues and soft golden hour light breaking through the clouds, reflecting the modern, professional aesthetic of the interface. The image is crisp and highly detailed, perfectly suited to demonstrate professional image resizing capabilities. The mood is calm and majestic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAq_3HRsqaWfaCOzL3Mjq567vxWJzc9EkQhcWkHTGSBOp2QPASDltDvGtLnYzYp-K3QDi2waJQuSWJ7oyJwn7pWw9jFjSPBD1pGBg6vVz1Fywta51UZ23oLNgCBKCeGdHJpi55bKSehDh_AkvO_Qvt5CC-jRt1aVr_JdAKiBKElf0OFisc3qphmO-rWFn4JfyyXPdww_5KK5V-yu91ejvqmb_JsQ2XZWkSpp0zTaoLtw6HOrhXXeubeVzg9bk3b7zgRJW1wdyD1h6Q" style="width: 800px; height: auto;"/>
+<!-- Overlay Grid (Optional visual flair for resizing) -->
+<div class="absolute inset-0 pointer-events-none flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
+<div class="w-[800px] h-[533px] border border-primary border-dashed relative">
+<div class="absolute -top-2 -left-2 w-4 h-4 bg-surface border border-primary rounded-full"></div>
+<div class="absolute -top-2 -right-2 w-4 h-4 bg-surface border border-primary rounded-full"></div>
+<div class="absolute -bottom-2 -left-2 w-4 h-4 bg-surface border border-primary rounded-full"></div>
+<div class="absolute -bottom-2 -right-2 w-4 h-4 bg-surface border border-primary rounded-full"></div>
+</div>
+</div>
+</div>
+</section>
+<!-- Control Panel -->
+<aside class="w-[340px] flex flex-col bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm overflow-hidden flex-shrink-0">
+<div class="p-lg border-b border-outline-variant bg-surface">
+<h2 class="font-headline-md text-headline-md font-bold text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">aspect_ratio</span>
+                        尺寸调整参数
+                    </h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">当前尺寸: 1920 x 1280</p>
+</div>
+<div class="flex-1 overflow-y-auto p-lg flex flex-col gap-xl">
+<!-- Dimension Inputs -->
+<div class="flex flex-col gap-md">
+<div class="flex justify-between items-center mb-1">
+<label class="font-label-md text-label-md text-on-surface-variant font-bold">按像素或百分比</label>
+<select class="h-8 pl-2 pr-8 py-0 text-body-md border-transparent bg-surface-container rounded-md focus:border-primary focus:ring-0">
+<option>像素 (px)</option>
+<option>百分比 (%)</option>
+</select>
+</div>
+<div class="flex items-center gap-sm">
+<!-- Width -->
+<div class="flex flex-col gap-xs flex-1">
+<label class="font-label-md text-label-md text-on-surface-variant">宽度</label>
+<input class="w-full h-10 px-md border border-outline-variant rounded-lg focus:border-primary focus:ring-1 focus:ring-primary font-body-md text-body-md text-on-surface bg-surface shadow-sm transition-all" type="number" value="1920"/>
+</div>
+<!-- Lock Toggle -->
+<div class="flex flex-col items-center justify-end h-full pt-6">
+<button class="w-8 h-8 rounded hover:bg-surface-container-high flex items-center justify-center text-primary bg-primary-fixed-dim/20 transition-colors group" title="锁定宽高比">
+<span class="material-symbols-outlined text-[20px] group-hover:scale-110 transition-transform">link</span>
+</button>
+</div>
+<!-- Height -->
+<div class="flex flex-col gap-xs flex-1">
+<label class="font-label-md text-label-md text-on-surface-variant">高度</label>
+<input class="w-full h-10 px-md border border-outline-variant rounded-lg focus:border-primary focus:ring-1 focus:ring-primary font-body-md text-body-md text-on-surface bg-surface shadow-sm transition-all" type="number" value="1280"/>
+</div>
+</div>
+</div>
+<hr class="border-outline-variant"/>
+<!-- Presets Bento Grid -->
+<div class="flex flex-col gap-sm">
+<label class="font-label-md text-label-md text-on-surface-variant font-bold">常用预设尺寸</label>
+<div class="grid grid-cols-2 gap-sm">
+<button class="flex flex-col items-start p-sm border border-outline-variant rounded-lg hover:border-primary hover:bg-primary-fixed/20 hover:text-primary transition-all text-on-surface bg-surface group">
+<span class="font-button-text text-button-text group-hover:text-primary">1080p (FHD)</span>
+<span class="text-[11px] text-on-surface-variant mt-1 group-hover:text-primary/70">1920 x 1080</span>
+</button>
+<button class="flex flex-col items-start p-sm border border-outline-variant rounded-lg hover:border-primary hover:bg-primary-fixed/20 hover:text-primary transition-all text-on-surface bg-surface group">
+<span class="font-button-text text-button-text group-hover:text-primary">720p (HD)</span>
+<span class="text-[11px] text-on-surface-variant mt-1 group-hover:text-primary/70">1280 x 720</span>
+</button>
+<button class="flex flex-col items-start p-sm border border-outline-variant rounded-lg hover:border-primary hover:bg-primary-fixed/20 hover:text-primary transition-all text-on-surface bg-surface group">
+<span class="font-button-text text-button-text group-hover:text-primary">4K (UHD)</span>
+<span class="text-[11px] text-on-surface-variant mt-1 group-hover:text-primary/70">3840 x 2160</span>
+</button>
+<button class="flex flex-col items-start p-sm border border-outline-variant rounded-lg hover:border-primary hover:bg-primary-fixed/20 hover:text-primary transition-all text-on-surface bg-surface group">
+<span class="font-button-text text-button-text group-hover:text-primary">Instagram 正方形</span>
+<span class="text-[11px] text-on-surface-variant mt-1 group-hover:text-primary/70">1080 x 1080</span>
+</button>
+<button class="col-span-2 flex flex-row items-center justify-between p-sm border border-outline-variant rounded-lg hover:border-primary hover:bg-primary-fixed/20 hover:text-primary transition-all text-on-surface bg-surface group">
+<div class="flex flex-col items-start">
+<span class="font-button-text text-button-text group-hover:text-primary">社交媒体封面</span>
+<span class="text-[11px] text-on-surface-variant mt-1 group-hover:text-primary/70">1200 x 630</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary">add_photo_alternate</span>
+</button>
+</div>
+</div>
+<hr class="border-outline-variant"/>
+<!-- Advanced Options -->
+<div class="flex flex-col gap-sm">
+<label class="font-label-md text-label-md text-on-surface-variant font-bold">插值算法</label>
+<select class="w-full h-10 px-md border border-outline-variant rounded-lg font-body-md text-body-md text-on-surface bg-surface focus:border-primary focus:ring-1 focus:ring-primary shadow-sm">
+<option>双三次插值 (Bicubic - 推荐)</option>
+<option>双线性插值 (Bilinear)</option>
+<option>最近邻插值 (Nearest Neighbor)</option>
+</select>
+<p class="text-[11px] text-on-surface-variant mt-1">双三次插值能够提供更平滑的渐变，适合大多数照片放大或缩小。</p>
+</div>
+</div>
+<!-- Action Footer -->
+<div class="p-lg border-t border-outline-variant bg-surface flex gap-md">
+<button class="flex-1 py-2 border border-outline-variant text-on-surface font-button-text text-button-text rounded-lg hover:bg-surface-container-high transition-colors active:scale-[0.98]">
+                        重置
+                    </button>
+<button class="flex-1 py-2 bg-primary text-on-primary font-button-text text-button-text rounded-lg hover:bg-on-primary-fixed-variant transition-colors active:scale-[0.98] shadow-sm flex items-center justify-center gap-1">
+<span class="material-symbols-outlined text-[18px]">check</span>
+                        应用更改
+                    </button>
+</div>
+</aside>
+</main>
+</div>
+</body></html>

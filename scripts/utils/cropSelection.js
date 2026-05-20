@@ -16,13 +16,33 @@ export class CropSelection {
     this.startTop = 0;
     this.startWidth = 0;
     this.startHeight = 0;
+    this.isCircle = false;
 
     this.init();
     this.showDefault();
   }
 
   init() {
+    // 添加8个调整手柄
+    this.selection.innerHTML = `
+      <div class="resize-handle nw"></div>
+      <div class="resize-handle n"></div>
+      <div class="resize-handle ne"></div>
+      <div class="resize-handle e"></div>
+      <div class="resize-handle se"></div>
+      <div class="resize-handle s"></div>
+      <div class="resize-handle sw"></div>
+      <div class="resize-handle w"></div>
+    `;
+
+    // 拖动整个选区
     this.selection.addEventListener('mousedown', this.onDragStart.bind(this));
+
+    // 调整大小手柄
+    this.selection.querySelectorAll('.resize-handle').forEach(handle => {
+      handle.addEventListener('mousedown', this.onResizeStart.bind(this));
+    });
+
     document.addEventListener('mousemove', this.onMouseMove.bind(this));
     document.addEventListener('mouseup', this.onMouseUp.bind(this));
   }
@@ -57,8 +77,18 @@ export class CropSelection {
 
   setShape(shape) {
     if (shape === 'circle') {
+      this.isCircle = true;
       this.selection.classList.add('circle');
+      const size = Math.min(this.selection.offsetWidth, this.selection.offsetHeight);
+      const currentLeft = parseFloat(this.selection.style.left);
+      const currentTop = parseFloat(this.selection.style.top);
+      const diff = this.selection.offsetWidth - size;
+      this.selection.style.width = size + 'px';
+      this.selection.style.height = size + 'px';
+      this.selection.style.left = (currentLeft + diff / 2) + 'px';
+      this.selection.style.top = (currentTop + diff / 2) + 'px';
     } else {
+      this.isCircle = false;
       this.selection.classList.remove('circle');
     }
   }
@@ -75,6 +105,19 @@ export class CropSelection {
     this.startTop = rect.top - overlayRect.top;
   }
 
+  onResizeStart(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    this.isResizing = true;
+    this.resizeHandle = e.target.className.split(' ')[1]; // 获取方向 (nw, n, ne, e, se, s, sw, w)
+    this.startX = e.clientX;
+    this.startY = e.clientY;
+    this.startLeft = parseFloat(this.selection.style.left);
+    this.startTop = parseFloat(this.selection.style.top);
+    this.startWidth = this.selection.offsetWidth;
+    this.startHeight = this.selection.offsetHeight;
+  }
+
   onMouseMove(e) {
     if (this.isDragging) {
       const dx = e.clientX - this.startX;
@@ -82,8 +125,8 @@ export class CropSelection {
       let newLeft = this.startLeft + dx;
       let newTop = this.startTop + dy;
 
-      const maxLeft = this.overlay.clientWidth - this.selection.clientWidth;
-      const maxTop = this.overlay.clientHeight - this.selection.clientHeight;
+      const maxLeft = this.overlay.clientWidth - this.selection.offsetWidth;
+      const maxTop = this.overlay.clientHeight - this.selection.offsetHeight;
       newLeft = Math.max(0, Math.min(newLeft, maxLeft));
       newTop = Math.max(0, Math.min(newTop, maxTop));
 
@@ -94,35 +137,61 @@ export class CropSelection {
     if (this.isResizing) {
       const dx = e.clientX - this.startX;
       const dy = e.clientY - this.startY;
+      let newLeft = this.startLeft;
+      let newTop = this.startTop;
       let newWidth = this.startWidth;
       let newHeight = this.startHeight;
+      const minSize = 50;
+
       const aspectRatio = this.startWidth / this.startHeight;
 
       switch (this.resizeHandle) {
         case 'se':
-          newWidth = Math.max(50, this.startWidth + dx);
-          newHeight = newWidth / aspectRatio;
+          newWidth = Math.max(minSize, this.startWidth + dx);
+          newHeight = this.isCircle ? newWidth : Math.max(minSize, this.startHeight + dy);
           break;
         case 'sw':
-          newWidth = Math.max(50, this.startWidth - dx);
-          newHeight = newWidth / aspectRatio;
-          this.selection.style.left = (this.startLeft + this.startWidth - newWidth) + 'px';
+          newWidth = Math.max(minSize, this.startWidth - dx);
+          newHeight = this.isCircle ? newWidth : Math.max(minSize, this.startHeight + dy);
+          newLeft = this.startLeft + this.startWidth - newWidth;
           break;
         case 'ne':
-          newWidth = Math.max(50, this.startWidth + dx);
-          newHeight = newWidth / aspectRatio;
-          this.selection.style.top = (this.startTop + this.startHeight - newHeight) + 'px';
+          newWidth = Math.max(minSize, this.startWidth + dx);
+          newHeight = this.isCircle ? newWidth : Math.max(minSize, this.startHeight - dy);
+          newTop = this.startTop + this.startHeight - newHeight;
           break;
         case 'nw':
-          newWidth = Math.max(50, this.startWidth - dx);
-          newHeight = newWidth / aspectRatio;
-          this.selection.style.left = (this.startLeft + this.startWidth - newWidth) + 'px';
-          this.selection.style.top = (this.startTop + this.startHeight - newHeight) + 'px';
+          newWidth = Math.max(minSize, this.startWidth - dx);
+          newHeight = this.isCircle ? newWidth : Math.max(minSize, this.startHeight - dy);
+          newLeft = this.startLeft + this.startWidth - newWidth;
+          newTop = this.startTop + this.startHeight - newHeight;
           break;
+        case 'n':
+          newHeight = Math.max(minSize, this.startHeight - dy);
+          newTop = this.startTop + this.startHeight - newHeight;
+          break;
+        case 's':
+          newHeight = Math.max(minSize, this.startHeight + dy);
+          break;
+        case 'e':
+          newWidth = Math.max(minSize, this.startWidth + dx);
+          break;
+        case 'w':
+          newWidth = Math.max(minSize, this.startWidth - dx);
+          newLeft = this.startLeft + this.startWidth - newWidth;
+          break;
+      }
+
+      if (this.isCircle) {
+        const size = Math.min(newWidth, newHeight);
+        newWidth = size;
+        newHeight = size;
       }
 
       this.selection.style.width = newWidth + 'px';
       this.selection.style.height = newHeight + 'px';
+      this.selection.style.left = newLeft + 'px';
+      this.selection.style.top = newTop + 'px';
     }
   }
 

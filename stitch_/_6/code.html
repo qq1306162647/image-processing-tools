@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>图灵工具 - 水印处理</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        /* Custom scrollbar for panel */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #c3c6d7;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #737686;
+        }
+        /* Range Slider Styling */
+        input[type=range] {
+            -webkit-appearance: none;
+            width: 100%;
+            background: transparent;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 16px;
+            width: 16px;
+            border-radius: 50%;
+            background: #004ac6;
+            cursor: pointer;
+            margin-top: -6px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 4px;
+            cursor: pointer;
+            background: #e0e3e5;
+            border-radius: 2px;
+        }
+        /* Transparency Checkerboard Pattern */
+        .bg-checkerboard {
+            background-color: #f7f9fb;
+            background-image: linear-gradient(45deg, #eceef0 25%, transparent 25%), 
+                              linear-gradient(-45deg, #eceef0 25%, transparent 25%), 
+                              linear-gradient(45deg, transparent 75%, #eceef0 75%), 
+                              linear-gradient(-45deg, transparent 75%, #eceef0 75%);
+            background-size: 20px 20px;
+            background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary-fixed-dim": "#b4c5ff",
+                        "surface-dim": "#d8dadc",
+                        "secondary-fixed-dim": "#b7c8e1",
+                        "on-surface": "#191c1e",
+                        "secondary-fixed": "#d3e4fe",
+                        "on-primary-fixed-variant": "#003ea8",
+                        "secondary-container": "#d0e1fb",
+                        "tertiary": "#943700",
+                        "surface": "#f7f9fb",
+                        "inverse-primary": "#b4c5ff",
+                        "inverse-on-surface": "#eff1f3",
+                        "outline-variant": "#c3c6d7",
+                        "primary": "#004ac6",
+                        "on-secondary-fixed": "#0b1c30",
+                        "primary-container": "#2563eb",
+                        "tertiary-container": "#bc4800",
+                        "on-surface-variant": "#434655",
+                        "surface-tint": "#0053db",
+                        "on-primary-container": "#eeefff",
+                        "on-secondary-fixed-variant": "#38485d",
+                        "background": "#f7f9fb",
+                        "tertiary-fixed": "#ffdbcd",
+                        "error": "#ba1a1a",
+                        "on-primary-fixed": "#00174b",
+                        "surface-container": "#eceef0",
+                        "on-error-container": "#93000a",
+                        "surface-container-highest": "#e0e3e5",
+                        "surface-variant": "#e0e3e5",
+                        "on-tertiary": "#ffffff",
+                        "surface-container-high": "#e6e8ea",
+                        "on-tertiary-fixed": "#360f00",
+                        "on-primary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "on-tertiary-fixed-variant": "#7d2d00",
+                        "secondary": "#505f76",
+                        "surface-bright": "#f7f9fb",
+                        "tertiary-fixed-dim": "#ffb596",
+                        "on-background": "#191c1e",
+                        "inverse-surface": "#2d3133",
+                        "outline": "#737686",
+                        "on-secondary": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "primary-fixed": "#dbe1ff",
+                        "on-tertiary-container": "#ffede6",
+                        "error-container": "#ffdad6",
+                        "on-secondary-container": "#54647a",
+                        "surface-container-low": "#f2f4f6"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "header-height": "64px",
+                        "gutter": "16px",
+                        "md": "16px",
+                        "xl": "32px",
+                        "sm": "8px",
+                        "xs": "4px",
+                        "lg": "24px",
+                        "base": "4px",
+                        "sidebar-width": "260px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "label-md": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "button-text": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["30px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                        "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "button-text": ["14px", {"lineHeight": "20px", "fontWeight": "600"}]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-surface text-on-surface font-body-md text-body-md flex h-screen overflow-hidden antialiased">
+<!-- SideNavBar -->
+<aside class="bg-surface dark:bg-inverse-surface flex flex-col h-full w-[260px] p-md gap-xs border-r border-outline-variant dark:border-outline flex-shrink-0 z-40 relative">
+<!-- Header -->
+<div class="flex items-center gap-sm px-sm py-md mb-md">
+<div class="w-8 h-8 rounded-lg bg-primary-container flex items-center justify-center text-on-primary-container">
+<span class="material-symbols-outlined" data-icon="auto_awesome">auto_awesome</span>
+</div>
+<div>
+<h1 class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed-dim">图灵工具</h1>
+<p class="font-label-md text-label-md text-on-surface-variant">专业图像处理</p>
+</div>
+</div>
+<!-- Navigation Links -->
+<nav class="flex-1 flex flex-col gap-xs overflow-y-auto">
+<a class="text-on-surface-variant dark:text-surface-variant flex items-center px-md py-sm rounded-lg hover:bg-surface-container-highest dark:hover:bg-surface-variant transition-colors active:scale-[0.95] duration-150" href="#">
+<span class="material-symbols-outlined mr-sm" data-icon="dashboard">dashboard</span>
+                控制台
+            </a>
+<a class="text-on-surface-variant dark:text-surface-variant flex items-center px-md py-sm rounded-lg hover:bg-surface-container-highest dark:hover:bg-surface-variant transition-colors active:scale-[0.95] duration-150" href="#">
+<span class="material-symbols-outlined mr-sm" data-icon="transform">transform</span>
+                格式转换
+            </a>
+<a class="text-on-surface-variant dark:text-surface-variant flex items-center px-md py-sm rounded-lg hover:bg-surface-container-highest dark:hover:bg-surface-variant transition-colors active:scale-[0.95] duration-150" href="#">
+<span class="material-symbols-outlined mr-sm" data-icon="crop">crop</span>
+                图片裁剪
+            </a>
+<a class="text-on-surface-variant dark:text-surface-variant flex items-center px-md py-sm rounded-lg hover:bg-surface-container-highest dark:hover:bg-surface-variant transition-colors active:scale-[0.95] duration-150" href="#">
+<span class="material-symbols-outlined mr-sm" data-icon="aspect_ratio">aspect_ratio</span>
+                尺寸调整
+            </a>
+<a class="text-on-surface-variant dark:text-surface-variant flex items-center px-md py-sm rounded-lg hover:bg-surface-container-highest dark:hover:bg-surface-variant transition-colors active:scale-[0.95] duration-150" href="#">
+<span class="material-symbols-outlined mr-sm" data-icon="compress">compress</span>
+                图片压缩
+            </a>
+<!-- Active Tab -->
+<a class="bg-primary-container text-on-primary-container dark:bg-primary dark:text-on-primary rounded-lg font-bold flex items-center px-md py-sm transition-colors active:scale-[0.95] duration-150" href="#">
+<span class="material-symbols-outlined mr-sm" data-icon="branding_watermark" data-weight="fill" style="font-variation-settings: 'FILL' 1;">branding_watermark</span>
+                水印工具
+            </a>
+<a class="text-on-surface-variant dark:text-surface-variant flex items-center px-md py-sm rounded-lg hover:bg-surface-container-highest dark:hover:bg-surface-variant transition-colors active:scale-[0.95] duration-150" href="#">
+<span class="material-symbols-outlined mr-sm" data-icon="code">code</span>
+                Base64转换
+            </a>
+<a class="text-on-surface-variant dark:text-surface-variant flex items-center px-md py-sm rounded-lg hover:bg-surface-container-highest dark:hover:bg-surface-variant transition-colors active:scale-[0.95] duration-150" href="#">
+<span class="material-symbols-outlined mr-sm" data-icon="rotate_right">rotate_right</span>
+                旋转工具
+            </a>
+</nav>
+<!-- CTA & Footer -->
+<div class="mt-auto flex flex-col gap-sm border-t border-outline-variant pt-md">
+<button class="w-full bg-primary-container text-on-primary-container font-button-text text-button-text py-sm rounded-lg flex items-center justify-center gap-xs hover:opacity-90 transition-opacity">
+<span class="material-symbols-outlined text-[18px]" data-icon="workspace_premium">workspace_premium</span>
+                升级专业版
+            </button>
+<div class="flex flex-col gap-xs mt-sm">
+<a class="text-on-surface-variant dark:text-surface-variant flex items-center px-md py-sm rounded-lg hover:bg-surface-container-highest transition-colors" href="#">
+<span class="material-symbols-outlined mr-sm text-[20px]" data-icon="settings">settings</span>
+                    设置
+                </a>
+<a class="text-on-surface-variant dark:text-surface-variant flex items-center px-md py-sm rounded-lg hover:bg-surface-container-highest transition-colors" href="#">
+<span class="material-symbols-outlined mr-sm text-[20px]" data-icon="logout">logout</span>
+                    退出登录
+                </a>
+</div>
+</div>
+</aside>
+<!-- Main Workspace -->
+<main class="flex-1 flex flex-col min-w-0 bg-surface">
+<!-- TopAppBar -->
+<header class="bg-surface-container-lowest dark:bg-inverse-surface border-b border-outline-variant dark:border-outline shadow-sm flex justify-between items-center h-[64px] px-xl w-full sticky top-0 z-30">
+<div class="flex items-center gap-lg">
+<!-- Branding suppressed here as it's in SideNav, but keeping links as per JSON -->
+<nav class="hidden md:flex items-center gap-md">
+<a class="text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-high dark:hover:bg-surface-variant transition-colors px-sm py-xs rounded font-body-md text-body-md" href="#">帮助</a>
+<a class="text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-high dark:hover:bg-surface-variant transition-colors px-sm py-xs rounded font-body-md text-body-md" href="#">文档</a>
+<a class="text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-high dark:hover:bg-surface-variant transition-colors px-sm py-xs rounded font-body-md text-body-md" href="#">定价</a>
+</nav>
+</div>
+<div class="flex items-center gap-md">
+<button class="text-on-surface-variant hover:bg-surface-container-highest p-sm rounded-full transition-colors w-10 h-10 flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="text-on-surface-variant hover:bg-surface-container-highest p-sm rounded-full transition-colors w-10 h-10 flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+<button class="bg-primary text-on-primary font-button-text text-button-text px-md py-sm rounded-lg flex items-center gap-xs hover:opacity-90 active:scale-[0.98] transition-all shadow-sm">
+<span class="material-symbols-outlined text-[18px]" data-icon="upload">upload</span>
+                    上传图片
+                </button>
+</div>
+</header>
+<!-- Canvas and Properties Area -->
+<div class="flex-1 flex overflow-hidden relative">
+<!-- Tool Header / Status (Optional, replacing TopAppBar if it was standalone, but we keep it minimal here) -->
+<div class="absolute top-md left-md z-10 flex gap-sm">
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg shadow-sm flex items-center px-sm py-xs">
+<span class="text-on-surface font-label-md text-label-md mr-sm">当前图片:</span>
+<span class="text-on-surface-variant font-body-md text-body-md truncate max-w-[150px]">project_image_final_v2.jpg</span>
+</div>
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg shadow-sm flex items-center px-sm py-xs">
+<span class="text-on-surface-variant font-body-md text-body-md">1920 × 1080</span>
+</div>
+</div>
+<!-- Canvas Container -->
+<section class="flex-1 p-xl overflow-auto flex items-center justify-center bg-surface relative">
+<!-- Outer Canvas Wrapper to simulate artboard -->
+<div class="relative shadow-md rounded-lg overflow-hidden border border-outline-variant bg-checkerboard flex items-center justify-center min-w-[600px] min-h-[400px] w-full max-w-4xl max-h-[80%] mx-auto transition-all">
+<!-- The Main Image -->
+<img alt="Working Image" class="w-full h-full object-contain pointer-events-none" data-alt="A pristine, highly detailed interior shot of a modern, minimalist corporate office space bathed in bright, soft natural daylight. The room features clean geometric lines, smooth white walls, and elegant light wood flooring. A sleek glass desk sits in the center with minimal technological devices, conveying a sense of organized, high-end productivity. The overall color palette is light mode inspired, dominated by whites, light greys, and subtle hints of corporate blue in the distant decor, perfectly matching a professional SaaS design system aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC1w9UblNG3ivqCYnqF6q8GWjnYWVTB6lZv5KNS3trydfftWWmxxBql40VhMva8rwyqABovyOEJa_CJ1nEjkyz7cqDLp-eqGDsjzmfCMb1I-xArObslfU-q4LrO4dUgURxd-vvVvmBfD2iYgdlhholVjQWJejVltzeVHyKvVqkIBUdZcBJhi0S8AWjkRsYM17Kao-A5Lqw1LWnSFilZwBoNjerW5kFEKY33uPDSL63ODY8mN4ya3wIOuuUV-wPafOSPBXE3zoImCJk"/>
+<!-- Simulated Watermark Overlay -->
+<div class="absolute inset-0 pointer-events-none flex p-xl">
+<!-- Bottom Right Placement (based on 9-grid) -->
+<div class="mt-auto ml-auto text-on-surface font-headline-lg text-headline-lg opacity-50 select-none drop-shadow-md" style="color: #ffffff; text-shadow: 0px 2px 4px rgba(0,0,0,0.5);">
+                            @TuringTools
+                        </div>
+</div>
+</div>
+<!-- Canvas Controls (Zoom) -->
+<div class="absolute bottom-xl left-1/2 -translate-x-1/2 bg-surface-container-lowest border border-outline-variant rounded-full shadow-sm flex items-center p-xs gap-xs z-10">
+<button class="w-8 h-8 flex items-center justify-center text-on-surface-variant hover:bg-surface-container-high rounded-full transition-colors">
+<span class="material-symbols-outlined text-[20px]" data-icon="remove">remove</span>
+</button>
+<span class="font-label-md text-label-md text-on-surface px-sm min-w-[48px] text-center">100%</span>
+<button class="w-8 h-8 flex items-center justify-center text-on-surface-variant hover:bg-surface-container-high rounded-full transition-colors">
+<span class="material-symbols-outlined text-[20px]" data-icon="add">add</span>
+</button>
+<div class="w-[1px] h-4 bg-outline-variant mx-xs"></div>
+<button class="w-8 h-8 flex items-center justify-center text-on-surface-variant hover:bg-surface-container-high rounded-full transition-colors" title="适应屏幕">
+<span class="material-symbols-outlined text-[20px]" data-icon="fit_screen">fit_screen</span>
+</button>
+</div>
+</section>
+<!-- Properties Panel (Right) -->
+<aside class="w-[320px] bg-surface-container-lowest border-l border-outline-variant flex flex-col flex-shrink-0 shadow-[-4px_0_24px_-12px_rgba(0,0,0,0.05)] z-20">
+<!-- Panel Header / Tabs -->
+<div class="flex border-b border-outline-variant pt-md px-md">
+<button class="flex-1 pb-sm text-primary font-bold border-b-2 border-primary text-center font-button-text text-button-text transition-colors">
+                        文字水印
+                    </button>
+<button class="flex-1 pb-sm text-on-surface-variant hover:text-on-surface text-center font-button-text text-button-text transition-colors">
+                        图片水印
+                    </button>
+</div>
+<!-- Panel Content Area -->
+<div class="flex-1 overflow-y-auto p-md flex flex-col gap-lg">
+<!-- Text Content Input -->
+<div class="flex flex-col gap-sm">
+<label class="font-label-md text-label-md text-on-surface font-medium flex justify-between">
+                            水印内容
+                            <span class="text-on-surface-variant font-normal">0/50</span>
+</label>
+<textarea class="w-full h-[80px] bg-surface resize-none border border-outline-variant rounded-lg p-sm font-body-md text-body-md text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all" placeholder="输入你想添加的水印文字...">@TuringTools</textarea>
+</div>
+<div class="w-full h-[1px] bg-surface-container-high"></div>
+<!-- Appearance Section -->
+<div class="flex flex-col gap-md">
+<h3 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">外观设置</h3>
+<!-- Font Family (Simulated Select) -->
+<div class="flex flex-col gap-xs">
+<label class="font-label-md text-label-md text-on-surface">字体</label>
+<div class="relative">
+<select class="w-full appearance-none bg-surface border border-outline-variant rounded-lg py-sm pl-sm pr-xl font-body-md text-body-md text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary cursor-pointer">
+<option>System Default (Inter)</option>
+<option>Noto Sans SC</option>
+<option>Roboto</option>
+</select>
+<span class="material-symbols-outlined absolute right-sm top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none" data-icon="expand_more">expand_more</span>
+</div>
+</div>
+<!-- Font Style & Color row -->
+<div class="flex gap-md">
+<div class="flex-1 flex flex-col gap-xs">
+<label class="font-label-md text-label-md text-on-surface">样式</label>
+<div class="flex bg-surface border border-outline-variant rounded-lg p-[2px]">
+<button class="flex-1 h-8 rounded-md bg-surface-container-lowest shadow-sm flex items-center justify-center text-on-surface border border-outline-variant font-bold">B</button>
+<button class="flex-1 h-8 rounded-md hover:bg-surface-container-high flex items-center justify-center text-on-surface-variant italic">I</button>
+<button class="flex-1 h-8 rounded-md hover:bg-surface-container-high flex items-center justify-center text-on-surface-variant underline">U</button>
+</div>
+</div>
+<div class="flex flex-col gap-xs">
+<label class="font-label-md text-label-md text-on-surface">颜色</label>
+<div class="h-[36px] w-[60px] rounded-lg border border-outline-variant bg-surface flex items-center justify-center cursor-pointer hover:bg-surface-container-high transition-colors">
+<div class="w-5 h-5 rounded-full bg-white border border-outline-variant shadow-sm"></div>
+</div>
+</div>
+</div>
+<!-- Font Size Slider -->
+<div class="flex flex-col gap-sm">
+<div class="flex justify-between items-center">
+<label class="font-label-md text-label-md text-on-surface">字号大小</label>
+<span class="font-label-md text-label-md text-primary bg-primary-fixed rounded px-2 py-0.5">36px</span>
+</div>
+<input class="w-full" max="120" min="10" type="range" value="36"/>
+</div>
+<!-- Opacity Slider -->
+<div class="flex flex-col gap-sm">
+<div class="flex justify-between items-center">
+<label class="font-label-md text-label-md text-on-surface">透明度</label>
+<span class="font-label-md text-label-md text-primary bg-primary-fixed rounded px-2 py-0.5">50%</span>
+</div>
+<input class="w-full" max="100" min="0" type="range" value="50"/>
+</div>
+</div>
+<div class="w-full h-[1px] bg-surface-container-high"></div>
+<!-- Layout / Position Section -->
+<div class="flex flex-col gap-md">
+<h3 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">位置与布局</h3>
+<div class="flex items-start justify-between gap-lg">
+<!-- 9-Grid Position Selector -->
+<div class="flex flex-col gap-xs items-center">
+<label class="font-label-md text-label-md text-on-surface self-start">九宫格位置</label>
+<div class="grid grid-cols-3 gap-1 p-1 bg-surface border border-outline-variant rounded-lg w-[120px] h-[120px]">
+<!-- Row 1 -->
+<button class="bg-surface-container-lowest border border-outline-variant rounded-md hover:bg-surface-container-highest transition-colors"></button>
+<button class="bg-surface-container-lowest border border-outline-variant rounded-md hover:bg-surface-container-highest transition-colors"></button>
+<button class="bg-surface-container-lowest border border-outline-variant rounded-md hover:bg-surface-container-highest transition-colors"></button>
+<!-- Row 2 -->
+<button class="bg-surface-container-lowest border border-outline-variant rounded-md hover:bg-surface-container-highest transition-colors"></button>
+<button class="bg-surface-container-lowest border border-outline-variant rounded-md hover:bg-surface-container-highest transition-colors"></button>
+<button class="bg-surface-container-lowest border border-outline-variant rounded-md hover:bg-surface-container-highest transition-colors"></button>
+<!-- Row 3 -->
+<button class="bg-surface-container-lowest border border-outline-variant rounded-md hover:bg-surface-container-highest transition-colors"></button>
+<button class="bg-surface-container-lowest border border-outline-variant rounded-md hover:bg-surface-container-highest transition-colors"></button>
+<button class="bg-primary border border-primary rounded-md shadow-inner flex items-center justify-center">
+<div class="w-1.5 h-1.5 rounded-full bg-white"></div>
+</button>
+</div>
+</div>
+<!-- Padding Controls -->
+<div class="flex-1 flex flex-col gap-sm">
+<div class="flex flex-col gap-xs">
+<label class="font-label-md text-label-md text-on-surface text-xs">边距 X (px)</label>
+<input class="w-full h-8 px-xs bg-surface border border-outline-variant rounded focus:border-primary focus:ring-1 focus:ring-primary outline-none text-body-md font-body-md" type="number" value="32"/>
+</div>
+<div class="flex flex-col gap-xs">
+<label class="font-label-md text-label-md text-on-surface text-xs">边距 Y (px)</label>
+<input class="w-full h-8 px-xs bg-surface border border-outline-variant rounded focus:border-primary focus:ring-1 focus:ring-primary outline-none text-body-md font-body-md" type="number" value="32"/>
+</div>
+<div class="flex flex-col gap-xs mt-xs">
+<label class="font-label-md text-label-md text-on-surface text-xs">旋转角度</label>
+<div class="flex items-center gap-xs">
+<input class="w-full h-8 px-xs bg-surface border border-outline-variant rounded focus:border-primary focus:ring-1 focus:ring-primary outline-none text-body-md font-body-md" type="number" value="0"/>
+<span class="text-on-surface-variant font-label-md">°</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Tiling Option -->
+<div class="flex items-center gap-sm mt-xs">
+<input class="w-4 h-4 text-primary rounded border-outline-variant focus:ring-primary focus:ring-offset-0 bg-surface" id="tile-watermark" type="checkbox"/>
+<label class="font-body-md text-body-md text-on-surface cursor-pointer select-none" for="tile-watermark">平铺水印 (全图覆盖)</label>
+</div>
+</div>
+<!-- Panel Footer / Actions -->
+<div class="p-md border-t border-outline-variant bg-surface-container-lowest flex gap-sm">
+<button class="flex-1 py-sm px-md bg-surface text-on-surface font-button-text text-button-text border border-outline-variant rounded-lg hover:bg-surface-container-highest transition-colors active:scale-[0.98]">
+                        重置
+                    </button>
+<button class="flex-[2] py-sm px-md bg-primary text-on-primary font-button-text text-button-text rounded-lg hover:opacity-90 transition-opacity active:scale-[0.98] shadow-sm flex items-center justify-center gap-xs">
+<span class="material-symbols-outlined text-[18px]" data-icon="check_circle">check_circle</span>
+                        应用水印
+                    </button>
+</div>
+</aside>
+</div>
+</main>
+</body></html>

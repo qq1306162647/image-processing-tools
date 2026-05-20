@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>图灵工具 - 图片压缩</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary-fixed-dim": "#b4c5ff",
+                        "surface-dim": "#d8dadc",
+                        "secondary-fixed-dim": "#b7c8e1",
+                        "on-surface": "#191c1e",
+                        "secondary-fixed": "#d3e4fe",
+                        "on-primary-fixed-variant": "#003ea8",
+                        "secondary-container": "#d0e1fb",
+                        "tertiary": "#943700",
+                        "surface": "#f7f9fb",
+                        "inverse-primary": "#b4c5ff",
+                        "inverse-on-surface": "#eff1f3",
+                        "outline-variant": "#c3c6d7",
+                        "primary": "#004ac6",
+                        "on-secondary-fixed": "#0b1c30",
+                        "primary-container": "#2563eb",
+                        "tertiary-container": "#bc4800",
+                        "on-surface-variant": "#434655",
+                        "surface-tint": "#0053db",
+                        "on-primary-container": "#eeefff",
+                        "on-secondary-fixed-variant": "#38485d",
+                        "background": "#f7f9fb",
+                        "tertiary-fixed": "#ffdbcd",
+                        "error": "#ba1a1a",
+                        "on-primary-fixed": "#00174b",
+                        "surface-container": "#eceef0",
+                        "on-error-container": "#93000a",
+                        "surface-container-highest": "#e0e3e5",
+                        "surface-variant": "#e0e3e5",
+                        "on-tertiary": "#ffffff",
+                        "surface-container-high": "#e6e8ea",
+                        "on-tertiary-fixed": "#360f00",
+                        "on-primary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "on-tertiary-fixed-variant": "#7d2d00",
+                        "secondary": "#505f76",
+                        "surface-bright": "#f7f9fb",
+                        "tertiary-fixed-dim": "#ffb596",
+                        "on-background": "#191c1e",
+                        "inverse-surface": "#2d3133",
+                        "outline": "#737686",
+                        "on-secondary": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "primary-fixed": "#dbe1ff",
+                        "on-tertiary-container": "#ffede6",
+                        "error-container": "#ffdad6",
+                        "on-secondary-container": "#54647a",
+                        "surface-container-low": "#f2f4f6"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "header-height": "64px",
+                        "gutter": "16px",
+                        "md": "16px",
+                        "xl": "32px",
+                        "sm": "8px",
+                        "xs": "4px",
+                        "lg": "24px",
+                        "base": "4px",
+                        "sidebar-width": "260px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "label-md": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "button-text": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["30px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "700" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500" }],
+                        "headline-md": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "button-text": ["14px", { "lineHeight": "20px", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 16px;
+            width: 16px;
+            border-radius: 50%;
+            background: #004ac6;
+            cursor: pointer;
+            margin-top: -6px;
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 4px;
+            cursor: pointer;
+            background: #e0e3e5;
+            border-radius: 2px;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen flex flex-col md:flex-row">
+<!-- TopAppBar (Mobile Only) -->
+<header class="md:hidden bg-surface-container-lowest border-b border-outline-variant shadow-sm flex justify-between items-center h-[64px] px-xl w-full sticky top-0 z-50">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-2xl">diamond</span>
+<h1 class="font-headline-md text-headline-md font-bold text-primary">图灵工具</h1>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-on-surface-variant hover:bg-surface-container-high p-2 rounded-full transition-colors active:scale-[0.98]">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="text-on-surface-variant hover:bg-surface-container-high p-2 rounded-full transition-colors active:scale-[0.98]">
+<span class="material-symbols-outlined">settings</span>
+</button>
+</div>
+</header>
+<!-- SideNavBar (Desktop Only) -->
+<aside class="hidden md:flex flex-col h-screen w-[260px] bg-surface p-md gap-xs border-r border-outline-variant fixed left-0 top-0 z-40">
+<div class="flex items-center gap-3 px-md py-lg mb-4">
+<div class="w-10 h-10 rounded-lg bg-primary-container flex items-center justify-center text-on-primary-container">
+<span class="material-symbols-outlined">diamond</span>
+</div>
+<div>
+<h1 class="font-headline-md text-headline-md font-bold text-primary">图灵工具</h1>
+<p class="font-label-md text-label-md text-on-surface-variant">专业图像处理</p>
+</div>
+</div>
+<nav class="flex-1 flex flex-col gap-xs overflow-y-auto">
+<a class="text-on-surface-variant flex items-center px-md py-sm rounded-lg hover:bg-surface-container-highest transition-colors active:scale-[0.95]" href="#">
+<span class="material-symbols-outlined mr-3">dashboard</span>
+<span class="font-body-md text-body-md">控制台</span>
+</a>
+<a class="text-on-surface-variant flex items-center px-md py-sm rounded-lg hover:bg-surface-container-highest transition-colors active:scale-[0.95]" href="#">
+<span class="material-symbols-outlined mr-3">transform</span>
+<span class="font-body-md text-body-md">格式转换</span>
+</a>
+<a class="text-on-surface-variant flex items-center px-md py-sm rounded-lg hover:bg-surface-container-highest transition-colors active:scale-[0.95]" href="#">
+<span class="material-symbols-outlined mr-3">crop</span>
+<span class="font-body-md text-body-md">图片裁剪</span>
+</a>
+<a class="text-on-surface-variant flex items-center px-md py-sm rounded-lg hover:bg-surface-container-highest transition-colors active:scale-[0.95]" href="#">
+<span class="material-symbols-outlined mr-3">aspect_ratio</span>
+<span class="font-body-md text-body-md">尺寸调整</span>
+</a>
+<a class="bg-primary-container text-on-primary-container flex items-center px-md py-sm rounded-lg font-bold active:scale-[0.95] transition-transform" href="#">
+<span class="material-symbols-outlined mr-3" style="font-variation-settings: 'FILL' 1;">compress</span>
+<span class="font-body-md text-body-md">图片压缩</span>
+</a>
+<a class="text-on-surface-variant flex items-center px-md py-sm rounded-lg hover:bg-surface-container-highest transition-colors active:scale-[0.95]" href="#">
+<span class="material-symbols-outlined mr-3">branding_watermark</span>
+<span class="font-body-md text-body-md">水印工具</span>
+</a>
+<a class="text-on-surface-variant flex items-center px-md py-sm rounded-lg hover:bg-surface-container-highest transition-colors active:scale-[0.95]" href="#">
+<span class="material-symbols-outlined mr-3">code</span>
+<span class="font-body-md text-body-md">Base64转换</span>
+</a>
+<a class="text-on-surface-variant flex items-center px-md py-sm rounded-lg hover:bg-surface-container-highest transition-colors active:scale-[0.95]" href="#">
+<span class="material-symbols-outlined mr-3">rotate_right</span>
+<span class="font-body-md text-body-md">旋转工具</span>
+</a>
+</nav>
+<div class="mt-auto pt-4 border-t border-outline-variant flex flex-col gap-xs">
+<button class="w-full py-2 bg-secondary-container text-on-secondary-container font-button-text text-button-text rounded-lg hover:bg-surface-tint hover:text-on-primary transition-colors mb-2">
+                升级专业版
+            </button>
+<a class="text-on-surface-variant flex items-center px-md py-sm rounded-lg hover:bg-surface-container-highest transition-colors active:scale-[0.95]" href="#">
+<span class="material-symbols-outlined mr-3">settings</span>
+<span class="font-body-md text-body-md">设置</span>
+</a>
+<a class="text-on-surface-variant flex items-center px-md py-sm rounded-lg hover:bg-surface-container-highest transition-colors active:scale-[0.95]" href="#">
+<span class="material-symbols-outlined mr-3">logout</span>
+<span class="font-body-md text-body-md">退出登录</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="flex-1 md:ml-[260px] p-md md:p-xl flex flex-col min-h-screen">
+<!-- Header area for the tool -->
+<div class="mb-lg flex justify-between items-end">
+<div>
+<h2 class="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface">图片压缩</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">智能降低文件大小，同时保持画质</p>
+</div>
+<div class="hidden md:flex gap-3">
+<button class="flex items-center gap-2 px-4 py-2 bg-surface-container-lowest border border-outline-variant text-primary rounded-lg font-button-text text-button-text hover:bg-surface-container-low transition-colors shadow-sm">
+<span class="material-symbols-outlined text-sm">upload_file</span>
+                    重新上传
+                </button>
+</div>
+</div>
+<!-- Workspace Layout: Canvas + Right Panel -->
+<div class="flex flex-col lg:flex-row gap-lg flex-1">
+<!-- Comparison Canvas -->
+<div class="flex-1 bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm overflow-hidden flex flex-col relative min-h-[400px]">
+<!-- Toolbar overlay -->
+<div class="absolute top-4 left-4 right-4 z-10 flex justify-between items-center pointer-events-none">
+<div class="bg-surface/80 backdrop-blur-md border border-outline-variant px-3 py-1.5 rounded-full shadow-sm pointer-events-auto flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+<span class="font-label-md text-label-md text-on-surface">原图 (10.2 MB)</span>
+</div>
+<div class="bg-surface/80 backdrop-blur-md border border-outline-variant px-3 py-1.5 rounded-full shadow-sm pointer-events-auto flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-error"></span>
+<span class="font-label-md text-label-md text-on-surface">压缩后 (预估: 1.1 MB)</span>
+</div>
+</div>
+<!-- Split View Container (Simulated for visual) -->
+<div class="flex-1 relative bg-surface-container flex group">
+<!-- Left Side (Original) -->
+<div class="w-1/2 h-full relative overflow-hidden border-r border-outline-variant/50">
+<img alt="landscape" class="absolute top-0 left-0 w-[200%] h-full object-cover object-left" data-alt="A breathtaking, highly detailed landscape photograph of a serene mountain valley at sunrise. The image is crisp, vibrant, and perfectly exposed, showcasing lush green forests, a pristine blue lake reflecting the sky, and majestic snow-capped peaks in the distance. The lighting is golden and warm, casting long shadows that highlight the textures of the terrain. Designed to represent a high-resolution, uncompressed original image in a professional editing software context." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDZlsdqxJ87qiU319oKClI1EO7UWmHZEF8k6YGSUdx-PlemuCXCd1pUaIF_iuPErpsDtwntSV7xlrTpzoOyDS-FTCXwM-aRvxQy3QVq0SgBMn9dg7wRFWv5vD3FoEOcaN50Vy2luQ5A-pThnz-17l-f1n140RUqdtz1KfliSoPLsnzZFc7dqW9Gd03E-UCIxpZCiZL-wVgXxX-WkQWRSftWq1m2s3R5arxp09NtCDCW_8_xV0v-2Lw6b-34w4ycntM1mie5F2QoPfM"/>
+</div>
+<!-- Right Side (Compressed) -->
+<div class="w-1/2 h-full relative overflow-hidden">
+<img alt="landscape compressed" class="absolute top-0 right-0 w-[200%] h-full object-cover object-right" data-alt="A slightly compressed version of a breathtaking landscape photograph of a mountain valley at sunrise. The image maintains general visual appeal with lush green forests, a blue lake, and snow-capped peaks, but upon close inspection, slight artifacting and a very subtle reduction in ultra-fine details (like leaves and distant rock textures) are visible. The lighting remains warm and golden. Designed to represent a high-quality but compressed image in a professional editing software comparison view." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCC8v7J_r3Y4ValotamPG6SDZV9G37uk2kGSdQuT_1VFfm9Pq1Y-bvDZI4Q-dWUShjG-5J6LcgMtg_ZQmfqgJ4MQhPYyPXRoFujP-a1BVLv9Mhtz-9wnv8NRr9HMjrBimiGUvPger8pRqDlRsindPpPXhYjHaNAQiykLUah56okbeSrzEITWoFFSBuddzJE--ujI13sU8fh5VhkGIVOv97HGtyQdSqLjlEMOp7TLlX7f11Ag39ChOHJoK2LffVTwXL1VtqNT-QsFBM"/>
+</div>
+<!-- Slider Handle (Visual only) -->
+<div class="absolute inset-y-0 left-1/2 w-1 bg-primary transform -translate-x-1/2 flex items-center justify-center cursor-ew-resize opacity-80 group-hover:opacity-100 transition-opacity">
+<div class="w-8 h-8 bg-surface-container-lowest border border-outline-variant rounded-full shadow-sm flex items-center justify-center relative -ml-0.5">
+<span class="material-symbols-outlined text-on-surface-variant text-[18px]">swap_horiz</span>
+</div>
+</div>
+</div>
+<!-- Bottom View Controls -->
+<div class="h-12 border-t border-outline-variant bg-surface-container-lowest flex items-center justify-between px-4">
+<div class="flex items-center gap-4">
+<button class="text-on-surface-variant hover:text-primary transition-colors flex items-center gap-1">
+<span class="material-symbols-outlined text-[20px]">zoom_in</span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors flex items-center gap-1">
+<span class="material-symbols-outlined text-[20px]">zoom_out</span>
+</button>
+<span class="font-label-md text-label-md text-on-surface-variant ml-2">100%</span>
+</div>
+<button class="text-on-surface-variant hover:text-primary transition-colors flex items-center gap-1">
+<span class="material-symbols-outlined text-[20px]">fit_screen</span>
+<span class="font-label-md text-label-md ml-1">适应屏幕</span>
+</button>
+</div>
+</div>
+<!-- Properties Panel -->
+<div class="w-full lg:w-[320px] flex flex-col gap-4">
+<!-- Settings Card -->
+<div class="bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm p-lg">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">tune</span>
+                        压缩设置
+                    </h3>
+<!-- Quality Slider -->
+<div class="mb-6">
+<div class="flex justify-between items-center mb-2">
+<label class="font-body-md text-body-md text-on-surface font-medium">压缩质量</label>
+<span class="font-body-md text-body-md text-primary font-bold">65%</span>
+</div>
+<input class="w-full appearance-none bg-transparent" max="100" min="0" type="range" value="65"/>
+<div class="flex justify-between items-center mt-2 text-on-surface-variant font-label-md text-label-md">
+<span>文件更小</span>
+<span>画质更好</span>
+</div>
+</div>
+<!-- Format Selection -->
+<div class="mb-6">
+<label class="font-body-md text-body-md text-on-surface font-medium block mb-2">输出格式</label>
+<div class="grid grid-cols-3 gap-2">
+<button class="py-2 border-2 border-primary bg-primary-fixed text-primary font-button-text text-button-text rounded-lg text-center">JPG</button>
+<button class="py-2 border border-outline-variant bg-surface text-on-surface-variant font-button-text text-button-text rounded-lg text-center hover:bg-surface-container-high transition-colors">PNG</button>
+<button class="py-2 border border-outline-variant bg-surface text-on-surface-variant font-button-text text-button-text rounded-lg text-center hover:bg-surface-container-high transition-colors">WEBP</button>
+</div>
+</div>
+<!-- Advanced Options Toggle -->
+<div>
+<button class="flex items-center justify-between w-full text-on-surface-variant hover:text-on-surface transition-colors">
+<span class="font-body-md text-body-md">高级选项</span>
+<span class="material-symbols-outlined">expand_more</span>
+</button>
+</div>
+</div>
+<!-- Stats Card -->
+<div class="bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm p-lg">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">analytics</span>
+                        预估结果
+                    </h3>
+<div class="space-y-4">
+<div class="flex justify-between items-center p-3 bg-surface-container-low rounded-lg border border-outline-variant/50">
+<span class="font-body-md text-body-md text-on-surface-variant">原文件</span>
+<span class="font-body-md text-body-md text-on-surface font-semibold">10.2 MB</span>
+</div>
+<div class="flex justify-center text-outline">
+<span class="material-symbols-outlined">arrow_downward</span>
+</div>
+<div class="flex justify-between items-center p-3 bg-secondary-container rounded-lg border border-secondary-fixed-dim">
+<span class="font-body-md text-body-md text-on-secondary-container font-medium">压缩后</span>
+<span class="font-body-md text-body-md text-primary font-bold text-lg">1.1 MB</span>
+</div>
+<div class="text-center pt-2">
+<span class="inline-block bg-primary-fixed text-primary font-label-md text-label-md px-3 py-1 rounded-full">
+                                节省约 89% 空间
+                            </span>
+</div>
+</div>
+</div>
+<!-- Actions -->
+<div class="mt-auto pt-4 flex flex-col gap-3">
+<button class="w-full py-3 bg-surface border border-outline-variant text-primary rounded-lg font-button-text text-button-text hover:bg-surface-container-high transition-colors active:scale-[0.98] flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[20px]">refresh</span>
+                        应用压缩
+                    </button>
+<button class="w-full py-3 bg-primary text-on-primary rounded-lg font-button-text text-button-text hover:bg-primary-container transition-colors active:scale-[0.98] shadow-sm flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[20px]">download</span>
+                        下载图片
+                    </button>
+</div>
+</div>
+</div>
+</main>
+</body></html>

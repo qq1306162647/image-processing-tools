@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+
+<html lang="zh"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>图灵工具 - 控制台</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary-fixed-dim": "#b4c5ff",
+                        "surface-dim": "#d8dadc",
+                        "secondary-fixed-dim": "#b7c8e1",
+                        "on-surface": "#191c1e",
+                        "secondary-fixed": "#d3e4fe",
+                        "on-primary-fixed-variant": "#003ea8",
+                        "secondary-container": "#d0e1fb",
+                        "tertiary": "#943700",
+                        "surface": "#f7f9fb",
+                        "inverse-primary": "#b4c5ff",
+                        "inverse-on-surface": "#eff1f3",
+                        "outline-variant": "#c3c6d7",
+                        "primary": "#004ac6",
+                        "on-secondary-fixed": "#0b1c30",
+                        "primary-container": "#2563eb",
+                        "tertiary-container": "#bc4800",
+                        "on-surface-variant": "#434655",
+                        "surface-tint": "#0053db",
+                        "on-primary-container": "#eeefff",
+                        "on-secondary-fixed-variant": "#38485d",
+                        "background": "#f7f9fb",
+                        "tertiary-fixed": "#ffdbcd",
+                        "error": "#ba1a1a",
+                        "on-primary-fixed": "#00174b",
+                        "surface-container": "#eceef0",
+                        "on-error-container": "#93000a",
+                        "surface-container-highest": "#e0e3e5",
+                        "surface-variant": "#e0e3e5",
+                        "on-tertiary": "#ffffff",
+                        "surface-container-high": "#e6e8ea",
+                        "on-tertiary-fixed": "#360f00",
+                        "on-primary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "on-tertiary-fixed-variant": "#7d2d00",
+                        "secondary": "#505f76",
+                        "surface-bright": "#f7f9fb",
+                        "tertiary-fixed-dim": "#ffb596",
+                        "on-background": "#191c1e",
+                        "inverse-surface": "#2d3133",
+                        "outline": "#737686",
+                        "on-secondary": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "primary-fixed": "#dbe1ff",
+                        "on-tertiary-container": "#ffede6",
+                        "error-container": "#ffdad6",
+                        "on-secondary-container": "#54647a",
+                        "surface-container-low": "#f2f4f6"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "header-height": "64px",
+                        "gutter": "16px",
+                        "md": "16px",
+                        "xl": "32px",
+                        "sm": "8px",
+                        "xs": "4px",
+                        "lg": "24px",
+                        "base": "4px",
+                        "sidebar-width": "260px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "label-md": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "button-text": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["30px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "700" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500" }],
+                        "headline-md": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "button-text": ["14px", { "lineHeight": "20px", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen flex">
+<!-- SideNavBar (Shared Component) -->
+<nav class="hidden md:flex fixed left-0 top-0 h-full w-[260px] p-md gap-xs border-r border-outline-variant bg-surface flex-col z-40">
+<!-- Header -->
+<div class="flex items-center gap-md px-sm py-sm mb-lg">
+<div class="w-10 h-10 bg-primary-container rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-on-primary-container">widgets</span>
+</div>
+<div>
+<h1 class="font-headline-md text-headline-md font-bold text-primary">图灵工具</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">专业图像处理</p>
+</div>
+</div>
+<!-- Navigation Links -->
+<div class="flex flex-col gap-xs flex-1">
+<!-- Active Tab: 控制台 -->
+<a class="bg-primary-container text-on-primary-container rounded-lg font-bold flex items-center px-md py-sm gap-md" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+<span class="font-button-text text-button-text">控制台</span>
+</a>
+<a class="text-on-surface-variant flex items-center px-md py-sm rounded-lg hover:bg-surface-container-highest transition-colors active:scale-[0.95] duration-150 gap-md" href="#">
+<span class="material-symbols-outlined">transform</span>
+<span class="font-button-text text-button-text">格式转换</span>
+</a>
+<a class="text-on-surface-variant flex items-center px-md py-sm rounded-lg hover:bg-surface-container-highest transition-colors active:scale-[0.95] duration-150 gap-md" href="#">
+<span class="material-symbols-outlined">crop</span>
+<span class="font-button-text text-button-text">图片裁切</span>
+</a>
+<a class="text-on-surface-variant flex items-center px-md py-sm rounded-lg hover:bg-surface-container-highest transition-colors active:scale-[0.95] duration-150 gap-md" href="#">
+<span class="material-symbols-outlined">aspect_ratio</span>
+<span class="font-button-text text-button-text">尺寸调整</span>
+</a>
+<a class="text-on-surface-variant flex items-center px-md py-sm rounded-lg hover:bg-surface-container-highest transition-colors active:scale-[0.95] duration-150 gap-md" href="#">
+<span class="material-symbols-outlined">compress</span>
+<span class="font-button-text text-button-text">图片压缩</span>
+</a>
+<a class="text-on-surface-variant flex items-center px-md py-sm rounded-lg hover:bg-surface-container-highest transition-colors active:scale-[0.95] duration-150 gap-md" href="#">
+<span class="material-symbols-outlined">branding_watermark</span>
+<span class="font-button-text text-button-text">水印工具</span>
+</a>
+<a class="text-on-surface-variant flex items-center px-md py-sm rounded-lg hover:bg-surface-container-highest transition-colors active:scale-[0.95] duration-150 gap-md" href="#">
+<span class="material-symbols-outlined">code</span>
+<span class="font-button-text text-button-text">Base64转换</span>
+</a>
+<a class="text-on-surface-variant flex items-center px-md py-sm rounded-lg hover:bg-surface-container-highest transition-colors active:scale-[0.95] duration-150 gap-md" href="#">
+<span class="material-symbols-outlined">rotate_right</span>
+<span class="font-button-text text-button-text">旋转工具</span>
+</a>
+</div>
+<!-- Footer -->
+<div class="flex flex-col gap-xs mt-auto">
+<div class="bg-surface-container-low p-md rounded-lg mb-sm border border-outline-variant flex flex-col gap-sm">
+<p class="font-label-md text-label-md text-on-surface-variant">当前版本: 免费版</p>
+<button class="w-full bg-surface-container-lowest text-primary border border-outline-variant font-button-text text-button-text py-sm rounded-lg hover:bg-surface-container-highest transition-colors">升级专业版</button>
+</div>
+<a class="text-on-surface-variant flex items-center px-md py-sm rounded-lg hover:bg-surface-container-highest transition-colors active:scale-[0.95] duration-150 gap-md" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-button-text text-button-text">设置</span>
+</a>
+<a class="text-on-surface-variant flex items-center px-md py-sm rounded-lg hover:bg-surface-container-highest transition-colors active:scale-[0.95] duration-150 gap-md" href="#">
+<span class="material-symbols-outlined">logout</span>
+<span class="font-button-text text-button-text">退出登录</span>
+</a>
+</div>
+</nav>
+<!-- Main Content Area -->
+<main class="flex-1 flex flex-col min-w-0 md:ml-[260px]">
+<!-- TopAppBar (Shared Component) -->
+<header class="flex justify-between items-center h-[64px] px-xl w-full sticky top-0 z-30 bg-surface-container-lowest border-b border-outline-variant shadow-sm">
+<div class="flex items-center">
+<!-- Mobile Menu Icon (hidden on desktop) -->
+<button class="md:hidden mr-md text-on-surface-variant">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<span class="md:hidden font-headline-md text-headline-md font-bold text-primary">图灵工具</span>
+<!-- Navigation Links (Desktop) -->
+<div class="hidden md:flex items-center gap-lg ml-md">
+<a class="font-button-text text-button-text text-on-surface-variant hover:text-on-surface transition-colors" href="#">帮助</a>
+<a class="font-button-text text-button-text text-on-surface-variant hover:text-on-surface transition-colors" href="#">文档</a>
+<a class="font-button-text text-button-text text-on-surface-variant hover:text-on-surface transition-colors" href="#">定价</a>
+</div>
+</div>
+<div class="flex items-center gap-md">
+<button class="bg-primary text-on-primary font-button-text text-button-text px-lg py-sm rounded-lg hover:bg-surface-tint active:scale-[0.98] transition-all duration-200">上传图片</button>
+<button class="w-10 h-10 rounded-full flex items-center justify-center text-on-surface-variant hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="w-10 h-10 rounded-full flex items-center justify-center text-on-surface-variant hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined">settings</span>
+</button>
+<img alt="用户头像" class="w-8 h-8 rounded-full border border-outline-variant object-cover cursor-pointer" data-alt="A close-up, professional headshot of a young male software professional with a warm smile, wearing a casual light blue collared shirt. The background is a soft, blurred studio grey, creating a clean, high-key corporate aesthetic that matches a modern SaaS application environment. The lighting is bright and even, casting no harsh shadows." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBPatDFIJErFx8P8ussDFusX8nh73m6QcWHYGJCT9V7B_gZZZ2Wz5yDiBfCvW3GNUcF2U28cUrMvKjQeeyxOyu27BgugCQIMfUvSjBkOkMu-RGuhND33UyoxIZM4n5BMi2l5wMuwss5QFgmux2W-iExvDHEQbgnXPyeS_lj30rBuG7mN1tlCc_XySCQHhdKhKF9jUGDNCTdI1ing4w83l51DwCRT1Q1tuamTaxLLZ3Xj4QO-bjG8b05h_47DZhhpNucqVNfcePJvLo"/>
+</div>
+</header>
+<!-- Canvas -->
+<div class="flex-1 p-md md:p-xl flex flex-col gap-xl overflow-y-auto">
+<!-- Hero Upload Area -->
+<div class="w-full border-2 border-dashed border-outline-variant rounded-xl bg-surface-container-lowest hover:bg-surface hover:border-primary transition-all duration-300 flex flex-col items-center justify-center py-[60px] md:py-[100px] gap-md cursor-pointer group shadow-sm">
+<div class="w-16 h-16 rounded-full bg-surface-container-low flex items-center justify-center group-hover:bg-primary-container transition-colors duration-300">
+<span class="material-symbols-outlined text-[32px] text-primary group-hover:text-on-primary-container">cloud_upload</span>
+</div>
+<div class="text-center px-md">
+<h2 class="font-headline-md text-headline-md font-bold text-on-surface mb-xs">拖拽图片至此，或点击上传</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">支持 JPG, PNG, WEBP, SVG 格式，单文件最大 50MB</p>
+</div>
+<button class="mt-sm bg-surface-container-lowest border border-outline-variant text-primary font-button-text text-button-text px-xl py-sm rounded-lg shadow-sm group-hover:bg-primary group-hover:text-on-primary group-hover:border-primary transition-colors duration-300">
+                    选择文件
+                </button>
+</div>
+<!-- Tools Grid Section -->
+<section class="flex flex-col gap-lg">
+<div class="flex items-center justify-between">
+<h3 class="font-headline-md text-headline-md font-bold text-on-surface">所有工具</h3>
+<div class="flex items-center gap-xs text-primary cursor-pointer hover:underline">
+<span class="font-button-text text-button-text">查看使用文档</span>
+<span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</div>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-md md:gap-lg">
+<!-- Tool Card 1 -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-lg flex flex-col gap-md hover:shadow-md hover:border-primary hover:-translate-y-1 transition-all duration-300 cursor-pointer group">
+<div class="w-12 h-12 rounded-lg bg-surface flex items-center justify-center group-hover:bg-primary-container transition-colors duration-300">
+<span class="material-symbols-outlined text-primary group-hover:text-on-primary-container">transform</span>
+</div>
+<div>
+<h4 class="font-button-text text-button-text font-bold text-on-surface mb-xs">格式转换</h4>
+<p class="font-body-md text-body-md text-on-surface-variant">在常见图像格式间进行高质量无损转换，支持批量处理。</p>
+</div>
+</div>
+<!-- Tool Card 2 -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-lg flex flex-col gap-md hover:shadow-md hover:border-primary hover:-translate-y-1 transition-all duration-300 cursor-pointer group">
+<div class="w-12 h-12 rounded-lg bg-surface flex items-center justify-center group-hover:bg-primary-container transition-colors duration-300">
+<span class="material-symbols-outlined text-primary group-hover:text-on-primary-container">crop</span>
+</div>
+<div>
+<h4 class="font-button-text text-button-text font-bold text-on-surface mb-xs">图片裁切</h4>
+<p class="font-body-md text-body-md text-on-surface-variant">自由裁剪图像区域，支持预设固定比例或自定义宽高比。</p>
+</div>
+</div>
+<!-- Tool Card 3 -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-lg flex flex-col gap-md hover:shadow-md hover:border-primary hover:-translate-y-1 transition-all duration-300 cursor-pointer group">
+<div class="w-12 h-12 rounded-lg bg-surface flex items-center justify-center group-hover:bg-primary-container transition-colors duration-300">
+<span class="material-symbols-outlined text-primary group-hover:text-on-primary-container">aspect_ratio</span>
+</div>
+<div>
+<h4 class="font-button-text text-button-text font-bold text-on-surface mb-xs">尺寸调整</h4>
+<p class="font-body-md text-body-md text-on-surface-variant">精确调整图像的像素尺寸，或按百分比快速进行缩放。</p>
+</div>
+</div>
+<!-- Tool Card 4 -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-lg flex flex-col gap-md hover:shadow-md hover:border-primary hover:-translate-y-1 transition-all duration-300 cursor-pointer group">
+<div class="w-12 h-12 rounded-lg bg-surface flex items-center justify-center group-hover:bg-primary-container transition-colors duration-300">
+<span class="material-symbols-outlined text-primary group-hover:text-on-primary-container">compress</span>
+</div>
+<div>
+<h4 class="font-button-text text-button-text font-bold text-on-surface mb-xs">图片压缩</h4>
+<p class="font-body-md text-body-md text-on-surface-variant">智能压缩算法，在保留视觉质量的同时大幅减小文件体积。</p>
+</div>
+</div>
+<!-- Tool Card 5 -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-lg flex flex-col gap-md hover:shadow-md hover:border-primary hover:-translate-y-1 transition-all duration-300 cursor-pointer group">
+<div class="w-12 h-12 rounded-lg bg-surface flex items-center justify-center group-hover:bg-primary-container transition-colors duration-300">
+<span class="material-symbols-outlined text-primary group-hover:text-on-primary-container">branding_watermark</span>
+</div>
+<div>
+<h4 class="font-button-text text-button-text font-bold text-on-surface mb-xs">水印工具</h4>
+<p class="font-body-md text-body-md text-on-surface-variant">为图片添加自定义文本或图像防盗水印，保护版权安全。</p>
+</div>
+</div>
+<!-- Tool Card 6 -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-lg flex flex-col gap-md hover:shadow-md hover:border-primary hover:-translate-y-1 transition-all duration-300 cursor-pointer group">
+<div class="w-12 h-12 rounded-lg bg-surface flex items-center justify-center group-hover:bg-primary-container transition-colors duration-300">
+<span class="material-symbols-outlined text-primary group-hover:text-on-primary-container">code</span>
+</div>
+<div>
+<h4 class="font-button-text text-button-text font-bold text-on-surface mb-xs">Base64转换</h4>
+<p class="font-body-md text-body-md text-on-surface-variant">快速将本地图像转换为Base64编码，或将编码还原为图像。</p>
+</div>
+</div>
+<!-- Tool Card 7 -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-lg flex flex-col gap-md hover:shadow-md hover:border-primary hover:-translate-y-1 transition-all duration-300 cursor-pointer group">
+<div class="w-12 h-12 rounded-lg bg-surface flex items-center justify-center group-hover:bg-primary-container transition-colors duration-300">
+<span class="material-symbols-outlined text-primary group-hover:text-on-primary-container">rotate_right</span>
+</div>
+<div>
+<h4 class="font-button-text text-button-text font-bold text-on-surface mb-xs">旋转工具</h4>
+<p class="font-body-md text-body-md text-on-surface-variant">支持标准90度、180度翻转，以及自定义精确角度旋转。</p>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+</body></html>
