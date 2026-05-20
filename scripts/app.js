@@ -334,22 +334,18 @@ function renderCompress() {
         <div class="bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm p-lg">
           <h3 class="font-headline-md text-headline-md text-on-surface mb-4 flex items-center gap-2">
             <span class="material-symbols-outlined text-primary">analytics</span>
-            预估结果
+            预估节省
           </h3>
           <div class="space-y-4">
             <div class="flex justify-between items-center p-3 bg-surface-container-low rounded-lg border border-outline-variant/50">
               <span class="font-body-md text-body-md text-on-surface-variant">原文件</span>
-              <span class="font-body-md text-body-md text-on-surface font-semibold" id="originalSizeLabel">${formatSize(state.originalSize || 0)}</span>
+              <span class="font-body-md text-body-md text-on-surface font-semibold">${formatSize(state.originalSize || 0)}</span>
             </div>
             <div class="flex justify-center text-outline">
               <span class="material-symbols-outlined">arrow_downward</span>
             </div>
-            <div class="flex justify-between items-center p-3 bg-secondary-container rounded-lg border border-secondary-fixed-dim">
-              <span class="font-body-md text-body-md text-on-secondary-container font-medium">压缩后</span>
-              <span class="font-body-md text-body-md text-primary font-bold text-lg" id="compressedSizeLabel">-</span>
-            </div>
-            <div class="flex justify-center mt-2">
-              <span class="font-label-md text-label-md text-on-surface-variant" id="compressRatioLabel"></span>
+            <div class="flex justify-center items-center p-3 bg-secondary-container rounded-lg border border-secondary-fixed-dim">
+              <span class="font-label-md text-label-md text-on-surface-variant" id="compressRatioLabel">调整滑块查看预估节省</span>
             </div>
           </div>
         </div>
@@ -393,66 +389,24 @@ function setupCompressPanel() {
 }
 
 async function updateCompressPreview() {
-  const img = getState('currentImage');
-  if (!img) return;
+  const ratioLabel = document.getElementById('compressRatioLabel');
+  if (!ratioLabel) return;
 
-  const originalSize = state.originalSize || 0;
-  if (originalSize === 0) return;
-
-  // 使用 100px 超小缩略图计算，速度快
-  const thumbSize = 100;
-  const scale = Math.min(thumbSize / img.width, thumbSize / img.height, 1);
-  const thumbWidth = Math.max(1, Math.round(img.width * scale));
-  const thumbHeight = Math.max(1, Math.round(img.height * scale));
-
-  const canvas = document.createElement('canvas');
-  canvas.width = thumbWidth;
-  canvas.height = thumbHeight;
-  const ctx = canvas.getContext('2d');
-  ctx.drawImage(img, 0, 0, thumbWidth, thumbHeight);
-
-  const blob = await new Promise((resolve) => {
-    canvas.toBlob(resolve, 'image/jpeg', state.quality / 100);
-  });
-
-  if (!blob) return;
-
-  // 估算原图压缩后大小
-  // 使用面积比例来估算，同时考虑 JPEG 压缩的非线性特性
-  const thumbPixels = thumbWidth * thumbHeight;
-  const originalPixels = img.width * img.height;
-  // JPEG 压缩比大致与像素数的对数成正比，这里用平方根来近似
-  const pixelRatio = Math.sqrt(originalPixels / thumbPixels);
-  const estimatedSize = Math.round(blob.size * pixelRatio);
-
-  const compressedLabel = document.getElementById('compressedSizeLabel');
-  if (compressedLabel) {
-    compressedLabel.textContent = formatSize(estimatedSize);
-
-    if (estimatedSize > originalSize) {
-      compressedLabel.classList.remove('text-primary');
-      compressedLabel.classList.add('text-error');
-    } else {
-      compressedLabel.classList.remove('text-error');
-      compressedLabel.classList.add('text-primary');
-    }
+  const quality = state.quality;
+  // JPEG 压缩大致规律：质量越低节省越多
+  // 这是一个粗略估算，供用户参考
+  let savedPercent = 0;
+  if (quality < 100) {
+    savedPercent = Math.round((100 - quality) * 0.7);
   }
 
-  const ratioLabel = document.getElementById('compressRatioLabel');
-  if (ratioLabel) {
-    const savedPercent = Math.round((1 - estimatedSize / originalSize) * 100);
-    if (savedPercent > 0) {
-      ratioLabel.textContent = `节省 ${savedPercent}%`;
-      ratioLabel.classList.remove('text-error');
-      ratioLabel.classList.add('text-primary');
-    } else if (savedPercent < 0) {
-      ratioLabel.textContent = `增大 ${Math.abs(savedPercent)}%`;
-      ratioLabel.classList.remove('text-primary');
-      ratioLabel.classList.add('text-error');
-    } else {
-      ratioLabel.textContent = '大小相同';
-      ratioLabel.classList.remove('text-error', 'text-primary');
-    }
+  if (savedPercent > 0) {
+    ratioLabel.textContent = `预估节省 ~${savedPercent}%`;
+    ratioLabel.classList.remove('text-error');
+    ratioLabel.classList.add('text-primary');
+  } else {
+    ratioLabel.textContent = '质量 100%，无节省';
+    ratioLabel.classList.remove('text-error', 'text-primary');
   }
 }
 
