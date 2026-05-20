@@ -379,36 +379,33 @@ async function updateCompressPreview() {
   const img = getState('currentImage');
   if (!img) return;
 
-  const result = await imageProcessor.estimateCompressedSize(img, state.quality, state.format);
-  const compressedLabel = document.getElementById('compressedSizeLabel');
   const originalSize = state.originalSize || 0;
+  if (originalSize === 0) return;
 
+  // 使用滑块的值来估算目标文件大小
+  // 100% = 原图大小，50% = 原图一半，10% = 原图 10%
+  const qualityPercent = state.quality / 100;
+  const estimatedSize = Math.round(originalSize * qualityPercent);
+
+  const compressedLabel = document.getElementById('compressedSizeLabel');
   if (compressedLabel) {
-    const estimatedSize = result.size;
     compressedLabel.textContent = formatSize(estimatedSize);
 
-    // 添加颜色提示：如果压缩后比原图大
-    if (originalSize > 0 && estimatedSize > originalSize) {
-      compressedLabel.classList.remove('text-primary');
-      compressedLabel.classList.add('text-error');
-    } else if (originalSize > 0) {
-      compressedLabel.classList.remove('text-error');
-      compressedLabel.classList.add('text-primary');
-    }
+    // 显示预估大小，不需要颜色提示（因为是按比例计算的）
+    compressedLabel.classList.remove('text-error');
+    compressedLabel.classList.add('text-primary');
   }
 
-  // 计算压缩率
+  // 计算节省比例
   const ratioLabel = document.getElementById('compressRatioLabel');
-  if (ratioLabel && originalSize > 0) {
-    const ratio = Math.round((1 - estimatedSize / originalSize) * 100);
-    if (ratio >= 0) {
-      ratioLabel.textContent = `节省 ${ratio}%`;
+  if (ratioLabel) {
+    const saved = Math.round((1 - qualityPercent) * 100);
+    if (saved >= 0) {
+      ratioLabel.textContent = `节省 ${saved}%`;
       ratioLabel.classList.remove('text-error');
       ratioLabel.classList.add('text-primary');
     } else {
-      ratioLabel.textContent = `增大 ${Math.abs(ratio)}%`;
-      ratioLabel.classList.remove('text-primary');
-      ratioLabel.classList.add('text-error');
+      ratioLabel.textContent = '';
     }
   }
 }
