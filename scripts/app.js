@@ -279,7 +279,7 @@ function setupFormatPanel() {
     setState({ format: e.target.value });
   });
 
-  exportBtn?.addEventListener('click', handleExport);
+  exportBtn?.addEventListener('click', () => handleExport());
 }
 
 function renderCompress() {
