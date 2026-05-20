@@ -58,8 +58,7 @@ function loadImage(file) {
       currentImage: img,
       originalSize: file.size,
       originalFormat: originalFormat,
-      format: originalFormat,  // 默认使用原图格式
-      convertToWebp: originalFormat === 'image/png'  // PNG 默认勾选 WebP 转换
+      format: originalFormat  // 默认使用原图格式
     });
 
     // 重新渲染当前页面以显示图片
@@ -330,16 +329,6 @@ function renderCompress() {
               <span>画质更好</span>
             </div>
           </div>
-          <!-- Convert to WebP Option -->
-          <div class="flex items-center gap-3 p-3 bg-surface-container-low rounded-lg border border-outline-variant/50">
-            <label class="flex items-center gap-2 cursor-pointer flex-1">
-              <input type="checkbox" id="convertWebp" class="w-5 h-5 rounded border-outline-variant accent-primary cursor-pointer" ${state.convertToWebp ? 'checked' : ''}/>
-              <div class="flex flex-col">
-                <span class="font-body-md text-body-md text-on-surface">转换为 WebP</span>
-                <span class="font-label-md text-label-md text-on-surface-variant">PNG/JPEG 转 WebP 可获得更好压缩效果</span>
-              </div>
-            </label>
-          </div>
         </div>
         <!-- Stats Card -->
         <div class="bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm p-lg">
@@ -382,7 +371,6 @@ function setupCompressPanel() {
   const compressSlider = document.getElementById('compressSlider');
   const qualityValue = document.getElementById('qualityValue');
   const downloadBtn = document.getElementById('downloadBtn');
-  const convertWebp = document.getElementById('convertWebp');
   let debounceTimer = null;
 
   compressSlider?.addEventListener('input', async (e) => {
@@ -397,14 +385,8 @@ function setupCompressPanel() {
     }, 150);
   });
 
-  convertWebp?.addEventListener('change', (e) => {
-    setState({ convertToWebp: e.target.checked });
-    updateCompressPreview();
-  });
-
   downloadBtn?.addEventListener('click', () => {
-    const exportFormat = state.convertToWebp ? 'image/webp' : state.originalFormat;
-    handleExport(exportFormat);
+    handleExport('image/jpeg');
   });
 
   updateCompressPreview();
@@ -417,32 +399,8 @@ async function updateCompressPreview() {
   const originalSize = state.originalSize || 0;
   if (originalSize === 0) return;
 
-  const isPng = state.originalFormat === 'image/png';
-  const convertToWebp = state.convertToWebp;
-  let estimatedSize = originalSize;
-  let compressFormat = state.originalFormat;
-
-  // PNG 如果不转换为 WebP，则无法压缩
-  if (isPng && !convertToWebp) {
-    const ratioLabel = document.getElementById('compressRatioLabel');
-    if (ratioLabel) {
-      ratioLabel.textContent = 'PNG 无损格式，无法压缩（勾选"转换为 WebP"可压缩）';
-      ratioLabel.classList.remove('text-primary');
-      ratioLabel.classList.add('text-error');
-    }
-    const compressedLabel = document.getElementById('compressedSizeLabel');
-    if (compressedLabel) {
-      compressedLabel.textContent = formatSize(originalSize);
-      compressedLabel.classList.remove('text-primary');
-      compressedLabel.classList.add('text-error');
-    }
-    return;
-  }
-
-  // PNG 转换为 WebP，或者 JPEG/WebP 直接压缩
-  if (isPng && convertToWebp) {
-    compressFormat = 'image/webp';
-  }
+  // 压缩输出为 JPEG 格式
+  const compressFormat = 'image/jpeg';
 
   const canvas = document.createElement('canvas');
   canvas.width = img.width;
@@ -456,7 +414,7 @@ async function updateCompressPreview() {
 
   if (!blob) return;
 
-  estimatedSize = blob.size;
+  const estimatedSize = blob.size;
 
   const compressedLabel = document.getElementById('compressedSizeLabel');
   if (compressedLabel) {
