@@ -2243,11 +2243,18 @@ async function handleExport(exportFormat) {
   document.body.appendChild(loadingMask);
 
   try {
+    // 获取预览图片元素
+    const previewImg = document.getElementById('watermarkImage') || document.getElementById('previewImage');
+    const wmImg = document.getElementById('watermarkImage');
+
+    // 用于绘制的图片（优先使用预览图片以保持坐标一致）
+    const imgToDraw = wmImg || img;
+
     let exportCanvas = document.createElement('canvas');
-    exportCanvas.width = img.width;
-    exportCanvas.height = img.height;
+    exportCanvas.width = imgToDraw.width;
+    exportCanvas.height = imgToDraw.height;
     const ctx = exportCanvas.getContext('2d');
-    ctx.drawImage(img, 0, 0);
+    ctx.drawImage(imgToDraw, 0, 0);
 
     // 应用水印
     const wm = state.watermark;
@@ -2257,9 +2264,8 @@ async function handleExport(exportFormat) {
       ctx.fillStyle = wm.color;
       ctx.font = `${wm.fontSize}px Inter, sans-serif`;
 
-      // 水印坐标是相对于容器的，需要转换为原图坐标
+      // 水印坐标是相对于预览容器的
       const container = document.getElementById('watermarkImageContainer');
-      const wmImg = document.getElementById('watermarkImage');
       let x = wm.x;
       let y = wm.y;
 
@@ -2277,27 +2283,15 @@ async function handleExport(exportFormat) {
         const relativeX = x - imgLeft;
         const relativeY = y - imgTop;
 
-        // 转换为原图坐标
-        const finalX = (relativeX / imgWidth) * img.width;
-        const finalY = (relativeY / imgHeight) * img.height;
-
-        console.log('Watermark transform:', {
-          wmX: x, wmY: y,
-          imgLeft, imgTop,
-          imgWidth, imgHeight,
-          relativeX, relativeY,
-          finalX, finalY,
-          imgW: img.width, imgH: img.height
-        });
-
-        x = finalX;
-        y = finalY;
+        // 转换为导出画布的坐标
+        x = (relativeX / imgWidth) * imgToDraw.width;
+        y = (relativeY / imgHeight) * imgToDraw.height;
       }
 
       // 如果位置无效，使用默认值
       if (!x || !y || isNaN(x) || isNaN(y) || x < 0 || y < 0) {
         x = 20;
-        y = img.height - wm.fontSize - 20;
+        y = imgToDraw.height - wm.fontSize - 20;
       }
 
       ctx.fillText(wm.text, x, y);
@@ -2315,7 +2309,7 @@ async function handleExport(exportFormat) {
       const wmWidth = wm.imageWidth || 100;
       const wmHeight = (watermarkImg.height / watermarkImg.width) * wmWidth;
 
-      // 水印坐标是相对于容器的，需要转换为原图坐标
+      // 水印坐标是相对于容器的，需要转换为导出画布坐标
       const container = document.getElementById('watermarkImageContainer');
       const wmImgEl = document.getElementById('watermarkImage');
       let x = wm.x;
@@ -2333,8 +2327,8 @@ async function handleExport(exportFormat) {
         const relativeX = x - imgLeft;
         const relativeY = y - imgTop;
 
-        x = (relativeX / imgDisplayWidth) * img.width;
-        y = (relativeY / imgDisplayHeight) * img.height;
+        x = (relativeX / imgDisplayWidth) * imgToDraw.width;
+        y = (relativeY / imgDisplayHeight) * imgToDraw.height;
       }
 
       // 如果位置无效，使用默认值
