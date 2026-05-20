@@ -46,11 +46,19 @@ function loadImage(file) {
   const url = URL.createObjectURL(file);
   const img = new Image();
 
+  // 从 file.type 获取原图格式，如果没有则根据扩展名判断
+  let originalFormat = file.type || 'image/png';
+  if (!originalFormat.startsWith('image/')) {
+    originalFormat = 'image/png';
+  }
+
   img.onload = () => {
     setState({
       originalImage: img,
       currentImage: img,
-      originalSize: file.size
+      originalSize: file.size,
+      originalFormat: originalFormat,
+      format: originalFormat  // 默认使用原图格式
     });
 
     // 重新渲染当前页面以显示图片
@@ -377,7 +385,7 @@ function setupCompressPanel() {
     }, 150);
   });
 
-  downloadBtn?.addEventListener('click', handleExport);
+  downloadBtn?.addEventListener('click', () => handleExport(state.originalFormat));
   updateCompressPreview();
 }
 
@@ -395,9 +403,9 @@ async function updateCompressPreview() {
   const ctx = canvas.getContext('2d');
   ctx.drawImage(img, 0, 0);
 
-  // 获取真实压缩后的大小
+  // 获取真实压缩后的大小（使用原图格式）
   const blob = await new Promise((resolve) => {
-    canvas.toBlob(resolve, state.format, state.quality / 100);
+    canvas.toBlob(resolve, state.originalFormat, state.quality / 100);
   });
 
   if (!blob) return;
@@ -2209,12 +2217,15 @@ async function handleApplyRotate() {
   render('#/rotate');
 }
 
-async function handleExport() {
+async function handleExport(exportFormat) {
   const img = getState('currentImage');
   if (!img) {
     alert('请先上传图片');
     return;
   }
+
+  // 如果没有指定格式，使用全局 format；否则使用指定格式
+  const format = exportFormat || state.format;
 
   // 显示加载蒙版
   const loadingMask = document.createElement('div');
@@ -2282,13 +2293,13 @@ async function handleExport() {
 
     // 获取导出的 blob
     const blob = await new Promise((resolve) => {
-      exportCanvas.toBlob(resolve, state.format, state.quality / 100);
+      exportCanvas.toBlob(resolve, format, state.quality / 100);
     });
 
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `watermarked_${formatTimestamp()}.${state.format.split('/')[1]}`;
+    a.download = `watermarked_${formatTimestamp()}.${format.split('/')[1]}`;
     a.click();
     URL.revokeObjectURL(url);
   } finally {

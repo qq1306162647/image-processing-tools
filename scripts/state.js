@@ -6,6 +6,7 @@ export const state = {
   canvas: null,
   format: 'image/webp',
   quality: 90,
+  originalFormat: 'image/png',  // 原图格式，压缩时保持原格式
   cropSelection: {
     x: 0,
     y: 0,
