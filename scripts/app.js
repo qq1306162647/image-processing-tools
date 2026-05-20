@@ -2258,7 +2258,6 @@ async function handleExport(exportFormat) {
       ctx.font = `${wm.fontSize}px Inter, sans-serif`;
 
       // 水印坐标是相对于容器的，需要转换为原图坐标
-      // 思路：容器中显示的图片区域就是水印的参考系
       const container = document.getElementById('watermarkImageContainer');
       const wmImg = document.getElementById('watermarkImage');
       let x = wm.x;
@@ -2268,19 +2267,31 @@ async function handleExport(exportFormat) {
         const containerRect = container.getBoundingClientRect();
         const imgRect = wmImg.getBoundingClientRect();
 
-        // 计算图片在容器中的显示区域（可能有留白）
+        // 计算图片在容器中的实际位置和尺寸
         const imgLeft = imgRect.left - containerRect.left;
         const imgTop = imgRect.top - containerRect.top;
-        const imgDisplayWidth = imgRect.width;
-        const imgDisplayHeight = imgRect.height;
+        const imgWidth = imgRect.width;
+        const imgHeight = imgRect.height;
 
-        // 水印坐标减去图片的偏移量，得到相对于图片显示区域的坐标
+        // 水印位置减去图片偏移，得到相对于图片的位置
         const relativeX = x - imgLeft;
         const relativeY = y - imgTop;
 
         // 转换为原图坐标
-        x = (relativeX / imgDisplayWidth) * img.width;
-        y = (relativeY / imgDisplayHeight) * img.height;
+        const finalX = (relativeX / imgWidth) * img.width;
+        const finalY = (relativeY / imgHeight) * img.height;
+
+        console.log('Watermark transform:', {
+          wmX: x, wmY: y,
+          imgLeft, imgTop,
+          imgWidth, imgHeight,
+          relativeX, relativeY,
+          finalX, finalY,
+          imgW: img.width, imgH: img.height
+        });
+
+        x = finalX;
+        y = finalY;
       }
 
       // 如果位置无效，使用默认值
