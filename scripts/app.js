@@ -2224,7 +2224,11 @@ async function handleExport(exportFormat) {
   }
 
   // 如果没有指定格式，使用全局 format；否则使用指定格式
-  const format = exportFormat || state.format;
+  // 确保 format 是有效的 MIME 类型字符串
+  let format = exportFormat || state.format;
+  if (!format || typeof format !== 'string' || !format.includes('/')) {
+    format = 'image/jpeg';
+  }
 
   // 显示加载蒙版
   const loadingMask = document.createElement('div');
