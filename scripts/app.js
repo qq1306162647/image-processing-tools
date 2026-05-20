@@ -399,22 +399,30 @@ async function updateCompressPreview() {
   const originalSize = state.originalSize || 0;
   if (originalSize === 0) return;
 
-  // 压缩输出为 JPEG 格式
-  const compressFormat = 'image/jpeg';
+  // 使用缩略图计算预估，大小固定为 400px
+  const maxSize = 400;
+  const scale = Math.min(maxSize / img.width, maxSize / img.height, 1);
+  const thumbWidth = Math.round(img.width * scale);
+  const thumbHeight = Math.round(img.height * scale);
 
   const canvas = document.createElement('canvas');
-  canvas.width = img.width;
-  canvas.height = img.height;
+  canvas.width = thumbWidth;
+  canvas.height = thumbHeight;
   const ctx = canvas.getContext('2d');
-  ctx.drawImage(img, 0, 0);
+  ctx.drawImage(img, 0, 0, thumbWidth, thumbHeight);
 
   const blob = await new Promise((resolve) => {
-    canvas.toBlob(resolve, compressFormat, state.quality / 100);
+    canvas.toBlob(resolve, 'image/jpeg', state.quality / 100);
   });
 
   if (!blob) return;
 
-  const estimatedSize = blob.size;
+  // 根据缩略图大小按比例估算原图压缩后大小
+  // 压缩后大小 ≈ 缩略图blob大小 * (原图像素 / 缩略图像素)
+  const thumbPixels = thumbWidth * thumbHeight;
+  const originalPixels = img.width * img.height;
+  const ratio = originalPixels / thumbPixels;
+  const estimatedSize = Math.round(blob.size * ratio);
 
   const compressedLabel = document.getElementById('compressedSizeLabel');
   if (compressedLabel) {
